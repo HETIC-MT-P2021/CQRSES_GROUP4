@@ -1,0 +1,22 @@
+basePath: /api/v1
+host: localhost:8080
+info:
+  contact:
+    email: Jbagostin@gmail.com
+    name: Agostin Jean-baptiste
+  description: This is an api for creating a app
+  license:
+    name: MIT
+  title: Survey documentation API
+  version: "1.0"
+paths: {}
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+  BasicAuth:
+    type: basic
+swagger: "2.0"
+x-extension-openapi:
+  example: value on a json format
