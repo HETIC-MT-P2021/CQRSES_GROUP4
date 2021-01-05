@@ -19,7 +19,7 @@ RUN go mod download
 COPY . /go/src/goproject/
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/goproject ./cmd/survey/
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/goproject ./cmd/app/
 
 FROM alpine
 
