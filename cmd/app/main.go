@@ -2,18 +2,19 @@ package main
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
-	_ "github.com/jibe0123/survey/api"
-	v1 "github.com/jibe0123/survey/cmd/v1"
-	"github.com/jibe0123/survey/pkg/database"
-	"github.com/swaggo/files"
-	"github.com/swaggo/gin-swagger"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	_ "github.com/jibe0123/survey/api"
+	v1 "github.com/jibe0123/survey/cmd/v1"
+	"github.com/jibe0123/survey/pkg/database"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // @title Survey documentation API

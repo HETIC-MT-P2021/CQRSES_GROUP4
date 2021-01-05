@@ -2,6 +2,7 @@ package database
 
 import (
 	"encoding/base64"
+
 	"github.com/jibe0123/survey/pkg/database/query"
 	"golang.org/x/crypto/bcrypt"
 )

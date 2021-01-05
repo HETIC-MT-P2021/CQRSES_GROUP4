@@ -1,11 +1,12 @@
 package auth
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jibe0123/survey/pkg/database"
 	jwt "github.com/kyfk/gin-jwt"
 	"golang.org/x/crypto/bcrypt"
-	"net/http"
 )
 
 type User = database.User
@@ -26,11 +27,13 @@ func NewAuth() (jwt.Auth, error) {
 				Username string `json:"username"`
 				Password string `json:"password"`
 			}
+
 			if err := c.ShouldBind(&req); err != nil {
 				return nil, jwt.ErrorAuthenticationFailed
 			}
 
 			u, err := database.GetUserFromUsername(req.Username)
+
 			if err != nil {
 				return nil, jwt.ErrorUserNotFound
 			}

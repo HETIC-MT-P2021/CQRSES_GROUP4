@@ -3,14 +3,21 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"log"
+	"time"
+
 	"github.com/caarlos0/env"
 	_ "github.com/go-sql-driver/mysql"
-	"log"
 )
 
 //DbConn stores the connexion to the database
 var (
 	DbConn *sql.DB
+)
+
+const (
+	attemptsDBConnexion = 3
+	waitForConnexion    = 3
 )
 
 // Config for DB connection
@@ -34,14 +41,22 @@ func Connect() error {
 	db, err := sql.Open("mysql", dsn)
 
 	if err != nil {
-		log.Print(err)
 		return err
 	}
 
-	err = db.Ping()
+	for index := 1; index <= attemptsDBConnexion; index++ {
+		err = db.Ping()
+		if err != nil {
+			if index < attemptsDBConnexion {
+				log.Printf("db connection failed, %d retry : %v", index, err)
+				time.Sleep(waitForConnexion * time.Second)
+			}
+			continue
+		} else {
+			DbConn = db
+		}
 
-	if err == nil {
-		DbConn = db
+		break
 	}
 
 	return nil
