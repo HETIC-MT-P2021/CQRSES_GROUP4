@@ -19,6 +19,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 
 	authRouter := r.Group("/auth")
 	{
-		authRouter.POST("/register", Admin(auth), Register)
+		authRouter.POST("/register", Register)
 	}
 }
