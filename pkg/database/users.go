@@ -1,8 +1,6 @@
 package database
 
 import (
-	"encoding/base64"
-
 	"github.com/jibe0123/survey/pkg/database/query"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -69,8 +67,7 @@ func GetUserFromUsername(username string) (user *User, err error) {
 
 // CreateAccount method for create an account with role operator
 func CreateAccount(userInput RequestRegister) (err error) {
-	data, err := base64.StdEncoding.DecodeString(userInput.Password)
-	hash, err := bcrypt.GenerateFromPassword(data, bcrypt.DefaultCost)
+	hash, err := bcrypt.GenerateFromPassword([]byte(userInput.Password), bcrypt.DefaultCost)
 	sqlStmt := query.QUERY_CREATE_ACCOUNT
 
 	tx, err := DbConn.Begin()
