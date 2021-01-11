@@ -1,9 +1,10 @@
 package auth
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 	jwt "github.com/kyfk/gin-jwt"
-	"log"
 )
 
 func ApplyRoutes(r *gin.RouterGroup) {
