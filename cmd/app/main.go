@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	_ "github.com/jibe0123/survey/api"
-	v1 "github.com/jibe0123/survey/cmd/v1"
-	"github.com/jibe0123/survey/pkg/database"
+	_ "github.com/jibe0123/CQRSES_GROUP4/api"
+	v1 "github.com/jibe0123/CQRSES_GROUP4/cmd/v1"
+	"github.com/jibe0123/CQRSES_GROUP4/pkg/database"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )

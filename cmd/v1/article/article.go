@@ -12,6 +12,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	}*/
 
 	// r.Use(jwt.ErrorHandler)
+	r.GET("/articles", GetArticle)
 	r.POST("/articles", CreateArticle)
 
 	/*authRouter := r.Group("/auth")
