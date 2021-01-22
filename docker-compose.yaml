@@ -22,7 +22,7 @@ services:
   api:
     build:
       context: ./
-      dockerfile: ./build/Dockerfile-go
+      dockerfile: ./build/Dockerfile-app
     environment:
       API_PORT: "8080"
       MYSQL_USER: goproject
@@ -35,6 +35,30 @@ services:
       - ./:/go:rw
     networks:
       - elastic
+      - backend
+
+  # Message broker service
+  rabbit:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks: 
+      - backend
+    
+  consumer:
+    depends_on:
+      - db
+      - rabbit
+    restart: on-failure
+    container_name: consumer
+    build: 
+      context: ./
+      dockerfile: ./build/Dockerfile-consumer
+    ports:
+      - "9001:9000"
+    networks: 
       - backend
 
   # Elastic

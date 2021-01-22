@@ -10,9 +10,9 @@ require (
 	github.com/google/uuid v1.1.5
 	github.com/kyfk/gin-jwt v0.0.0-20191024073357-fd8387d8d220
 	github.com/lib/pq v1.3.0
-	github.com/olivere/elastic v6.2.35+incompatible
 	github.com/olivere/elastic/v7 v7.0.22
 	github.com/satori/go.uuid v1.2.0
+	github.com/streadway/amqp v1.0.0
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.3.0
 	github.com/swaggo/swag v1.7.0
