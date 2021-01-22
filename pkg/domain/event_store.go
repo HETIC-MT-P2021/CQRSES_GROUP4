@@ -25,7 +25,7 @@ var entityImpl EntityImpl = EntityImpl{
 		ev.Event{
 			Process: events.ArticleCreatedEvent{
 				db.Article{
-					ID:          1,
+					ID:          "1",
 					Title:       "First created article",
 					Description: "Here is first article",
 				},

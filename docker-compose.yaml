@@ -22,7 +22,7 @@ services:
   api:
     build:
       context: ./
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./build/Dockerfile-go
     environment:
       API_PORT: "8080"
       MYSQL_USER: goproject
@@ -34,40 +34,42 @@ services:
     volumes:
       - ./:/go:rw
     networks:
+      - elastic
       - backend
 
-  # # Elastic
-  # elasticsearch:
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
-  #   container_name: elasticsearch1
-  #   environment:
-  #     - node.name=elasticsearch1
-  #     - cluster.name=docker-cluster
-  #     - cluster.initial_master_nodes=elasticsearch1
-  #     - bootstrap.memory_lock=true
-  #     - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
-  #     - http.cors.enabled=true
-  #     - http.cors.allow-origin=*
-  #     - network.host=_eth0_
-  #   ulimits:
-  #     memlock:
-  #       soft: -1
-  #       hard: -1
-  #   cap_add:
-  #     - ALL
-  #   volumes:
-  #     - type: volume
-  #       source: logs
-  #       target: /var/log
-  #     - type: volume
-  #       source: esdata1
-  #       target: /usr/share/elasticsearch/data
-  #   networks:
-  #     - elastic
-  #     - ingress
-  #   ports:
-  #     - 9200:9200
-  #     - 9300:9300
+  # Elastic
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - node.name=elasticsearch
+      - cluster.name=docker-cluster
+    #  - cluster.initial_master_nodes=elasticsearch
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - network.host=_eth0_
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    cap_add:
+      - ALL
+    volumes:
+      - type: volume
+        source: logs
+        target: /var/log
+      - type: volume
+        source: esdata1
+        target: /usr/share/elasticsearch/data
+    networks:
+      - elastic
+      - ingress
+    ports:
+      - 9200:9200
+      - 9300:9300
 
   # # kibana
   # kibana:

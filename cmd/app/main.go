@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -13,6 +14,7 @@ import (
 	_ "github.com/jibe0123/CQRSES_GROUP4/api"
 	v1 "github.com/jibe0123/CQRSES_GROUP4/cmd/v1"
 	"github.com/jibe0123/CQRSES_GROUP4/pkg/database"
+	"github.com/jibe0123/CQRSES_GROUP4/pkg/database/elasticsearch"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -44,6 +46,8 @@ func main() {
 	if err := database.Connect(); err != nil {
 		log.Panic(err)
 	}
+
+	tryConnectToElasticSearch()
 
 	url := ginSwagger.URL("http://localhost:8080/swagger/doc.json") // The url pointing to API definition
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
@@ -79,4 +83,18 @@ func main() {
 	}
 
 	log.Println("Server exited")
+}
+
+func tryConnectToElasticSearch() {
+	for index := 0; index <= 5; index++ {
+		es, err := elasticsearch.NewElastic(fmt.Sprintf("http://%s", "elasticsearch:9200"))
+		if err != nil {
+			log.Println(err)
+			time.Sleep(3)
+		} else {
+			fmt.Println("You're connected to elastic search...")
+			elasticsearch.SetRepository(es)
+		}
+	}
+	defer elasticsearch.Close()
 }

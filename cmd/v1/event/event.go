@@ -1,4 +1,4 @@
-package article
+package event
 
 import (
 	"github.com/gin-gonic/gin"
@@ -12,8 +12,8 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	}*/
 
 	// r.Use(jwt.ErrorHandler)
-	r.GET("/articles", GetArticle)
-	r.POST("/articles", CreateArticle)
+	r.GET("/events", GetEvents)
+	r.POST("/events", CreateEvent)
 
 	/*authRouter := r.Group("/auth")
 	{

@@ -1,6 +1,9 @@
 package events
 
 import (
+	"log"
+	"strconv"
+
 	db "github.com/jibe0123/CQRSES_GROUP4/pkg/database"
 	"github.com/jibe0123/CQRSES_GROUP4/pkg/event"
 )
@@ -30,7 +33,13 @@ func (articleUpdatedEvent ArticleUpdatedEvent) Payload() event.Payload {
 // Apply an event to get edited article
 func (articleUpdatedEvent ArticleUpdatedEvent) Apply(articles []db.Article) []db.Article {
 	for index, article := range articles {
-		if article.ID == articleUpdatedEvent.ArticleID {
+		articleID, err := strconv.Atoi(article.ID)
+		if err != nil {
+			log.Println(err)
+			return articles
+		}
+
+		if articleID == articleUpdatedEvent.ArticleID {
 			articles[index] = articleUpdatedEvent.NewArticle
 			break
 		}
