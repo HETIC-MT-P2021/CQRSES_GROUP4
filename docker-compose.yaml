@@ -22,7 +22,7 @@ services:
   api:
     build:
       context: ./
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./build/Dockerfile-app
     environment:
       API_PORT: "8080"
       MYSQL_USER: goproject
@@ -34,16 +34,18 @@ services:
     volumes:
       - ./:/go:rw
     networks:
+      - elastic
       - backend
 
   # Elastic
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
-    container_name: elasticsearch1
+    container_name: elasticsearch
     environment:
-      - node.name=elasticsearch1
+      - discovery.type=single-node
+      - node.name=elasticsearch
       - cluster.name=docker-cluster
-      - cluster.initial_master_nodes=elasticsearch1
+    #  - cluster.initial_master_nodes=elasticsearch
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
       - http.cors.enabled=true
@@ -69,29 +71,29 @@ services:
       - 9200:9200
       - 9300:9300
 
-  # kibana
-  kibana:
-    image: docker.elastic.co/kibana/kibana:7.8.0
-    container_name: kibana
-    environment:
-      SERVER_NAME: localhost
-      ELASTICSEARCH_URL: http://elasticsearch1:9200/
-    ports:
-      - 5601:5601
-    volumes:
-      - type: volume
-        source: logs
-        target: /var/log
-    ulimits:
-      nproc: 65535
-      memlock:
-        soft: -1
-        hard: -1
-    cap_add:
-      - ALL
-    networks:
-      - elastic
-      - ingress
+  # # kibana
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:7.8.0
+  #   container_name: kibana
+  #   environment:
+  #     SERVER_NAME: localhost
+  #     ELASTICSEARCH_URL: http://elasticsearch1:9200/
+  #   ports:
+  #     - 5601:5601
+  #   volumes:
+  #     - type: volume
+  #       source: logs
+  #       target: /var/log
+  #   ulimits:
+  #     nproc: 65535
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   cap_add:
+  #     - ALL
+  #   networks:
+  #     - elastic
+  #     - ingress
 
 volumes:
   esdata1:

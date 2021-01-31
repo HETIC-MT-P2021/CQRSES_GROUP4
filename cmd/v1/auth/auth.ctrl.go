@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jibe0123/survey/pkg/database"
+	"github.com/jibe0123/CQRSES_GROUP4/pkg/database"
 	jwt "github.com/kyfk/gin-jwt"
 	"golang.org/x/crypto/bcrypt"
 )

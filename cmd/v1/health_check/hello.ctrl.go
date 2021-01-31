@@ -2,7 +2,7 @@ package health_check
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jibe0123/survey/pkg/database"
+	"github.com/jibe0123/CQRSES_GROUP4/pkg/database"
 	"log"
 )
 
