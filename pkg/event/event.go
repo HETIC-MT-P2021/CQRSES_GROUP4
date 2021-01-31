@@ -1,22 +1,64 @@
 package event
 
-import db "github.com/jibe0123/CQRSES_GROUP4/pkg/database"
+import "fmt"
 
-type Event struct {
-	Process EventProcessor
+// EventBus Contains handlers
+type EventBus struct {
+	handlers map[string]EventHandler
 }
 
-// EventProcessor Make process on event
-// Key() allow to get Event name
-// Payload() allow to get event content
-// Apply() allow to apply event to get the new state of an entity
-type EventProcessor interface {
-	Key() string
-	Payload() Payload
-	Apply([]db.Article) []db.Article
+// Event General event to override to create custom events
+type Event interface {
+	Type() string
+	Payload() interface{}
 }
 
-// Payload allow to get event content
-type Payload struct {
+// NewEventBus Initialize empty handlers in bus
+func NewEventBus() *EventBus {
+	eventBus := &EventBus{
+		handlers: make(map[string]EventHandler),
+	}
+
+	return eventBus
+}
+
+// AddHandler to bus
+func (eventBus EventBus) AddHandler(handler EventHandler, event interface{}) error {
+	typeName := typeOf(event)
+	if _, ok := eventBus.handlers[typeName]; ok {
+		return fmt.Errorf("Event handler already exists")
+	}
+
+	eventBus.handlers[typeName] = handler
+	return nil
+}
+
+// Dispatch Calls good event process
+func (eventBus EventBus) Dispatch(event Event) error {
+	if handler, ok := eventBus.handlers[event.Type()]; ok {
+		return handler.Handle(event)
+	}
+	return fmt.Errorf("Handler doesn't exist")
+}
+
+// EventImpl Overrides Event
+type EventImpl struct {
 	Content interface{}
+}
+
+// NewEventImpl Initialize an Event implementation
+func NewEventImpl(eventContent interface{}) *EventImpl {
+	return &EventImpl{
+		Content: eventContent,
+	}
+}
+
+// Type Returns event type
+func (event EventImpl) Type() string {
+	return typeOf(event.Content)
+}
+
+// Payload Returns event content
+func (event EventImpl) Payload() interface{} {
+	return event.Content
 }

@@ -1,5 +1,7 @@
 package article
 
+import "github.com/gin-gonic/gin"
+
 func ApplyRoutes(r *gin.RouterGroup) {
 	/*auth, err := NewAuth()
 

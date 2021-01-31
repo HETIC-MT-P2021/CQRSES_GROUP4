@@ -1,7 +1,7 @@
 package database
 
 type Article struct {
-	ID          string `json:"id"`
+	ID          int    `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
 }

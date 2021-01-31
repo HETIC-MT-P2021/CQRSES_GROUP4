@@ -9,7 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 	db "github.com/jibe0123/CQRSES_GROUP4/pkg/database"
 	"github.com/jibe0123/CQRSES_GROUP4/pkg/database/elasticsearch"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/rabbitmq"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -28,14 +27,6 @@ func GetEvents(c *gin.Context) {
 
 // CreateEvent in elasticsearch database
 func CreateEvent(c *gin.Context) {
-	rabbitmq.SendEventMessage()
-
-	c.JSON(http.StatusCreated, gin.H{
-		"status": "sent",
-	})
-
-	return
-
 	var req db.RequestCreate
 
 	if err := c.BindJSON(&req); err != nil {
@@ -53,7 +44,7 @@ func CreateEvent(c *gin.Context) {
 		EventName: "ArticleCreatedEvent",
 		CreatedAt: strconv.FormatInt(timestamp, 10),
 		Payload: db.Article{
-			ID:          "2",
+			ID:          2,
 			Title:       req.Title,
 			Description: req.Description,
 		},
@@ -64,8 +55,6 @@ func CreateEvent(c *gin.Context) {
 		log.Println(err)
 		return
 	}
-
-	rabbitmq.SendEventMessage()
 
 	c.JSON(http.StatusCreated, gin.H{
 		"status": "created",
