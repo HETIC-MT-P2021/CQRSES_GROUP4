@@ -14,6 +14,7 @@ import (
 	v1 "github.com/jibe0123/CQRSES_GROUP4/cmd/v1"
 	"github.com/jibe0123/CQRSES_GROUP4/pkg/database"
 	dmn "github.com/jibe0123/CQRSES_GROUP4/pkg/domain"
+	"github.com/jibe0123/CQRSES_GROUP4/pkg/domain/state"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -47,6 +48,7 @@ func main() {
 	}
 
 	dmn.InitBusses()
+	state.InitState()
 	//tryConnectToElasticSearch()
 
 	url := ginSwagger.URL("http://localhost:8080/swagger/doc.json") // The url pointing to API definition

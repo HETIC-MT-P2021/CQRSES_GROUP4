@@ -51,8 +51,8 @@ type CommandImpl struct {
 	command interface{}
 }
 
-// NewCommand Initialize an Command implementation
-func NewCommand(command interface{}) *CommandImpl {
+// NewCommandImpl Initialize an Command implementation
+func NewCommandImpl(command interface{}) *CommandImpl {
 	return &CommandImpl{
 		command: command,
 	}

@@ -7,5 +7,5 @@ type CommandHandler interface {
 
 // QueryHandler Allows to manage Query
 type QueryHandler interface {
-	Handle(Query) error
+	Handle(Query) (interface{}, error)
 }

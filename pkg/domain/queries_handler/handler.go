@@ -5,23 +5,25 @@ import (
 	"fmt"
 
 	"github.com/jibe0123/CQRSES_GROUP4/pkg/cqrs"
+	"github.com/jibe0123/CQRSES_GROUP4/pkg/database"
 	"github.com/jibe0123/CQRSES_GROUP4/pkg/domain/queries"
+	"github.com/jibe0123/CQRSES_GROUP4/pkg/domain/state"
 )
 
-type ReadArticleQueryHandler struct{}
+type ReadArticlesQueryHandler struct{}
 
-func (ch ReadArticleQueryHandler) Handle(command cqrs.Query) error {
-	switch cmd := command.Payload().(type) {
-	case *queries.ReadArticleQuery:
-		fmt.Println("Handler.")
-		fmt.Println(cmd)
+func (ch ReadArticlesQueryHandler) Handle(query cqrs.Query) (interface{}, error) {
+	switch qu := query.Payload().(type) {
+	case *queries.ReadArticlesQuery:
+		fmt.Println(qu)
+		fmt.Println("fdp ntm")
+		fmt.Println(state.CurrentArticles.Articles())
+		return []database.Article{}, nil
 	default:
-		return errors.New("bad command type")
+		return []database.Article{}, errors.New("bad command type")
 	}
-
-	return nil
 }
 
-func NewReadArticleQueryHandler() *ReadArticleQueryHandler {
-	return &ReadArticleQueryHandler{}
+func NewReadArticlesQueryHandler() *ReadArticlesQueryHandler {
+	return &ReadArticlesQueryHandler{}
 }

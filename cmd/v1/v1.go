@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jibe0123/CQRSES_GROUP4/cmd/v1/article"
 	"github.com/jibe0123/CQRSES_GROUP4/cmd/v1/auth"
+	"github.com/jibe0123/CQRSES_GROUP4/cmd/v1/command"
 	"github.com/jibe0123/CQRSES_GROUP4/cmd/v1/event"
 	"github.com/jibe0123/CQRSES_GROUP4/cmd/v1/health_check"
 )
@@ -13,6 +14,7 @@ func ApplyRoutes(r *gin.Engine) {
 	{
 		health_check.ApplyRoutes(app)
 		auth.ApplyRoutes(app)
+		command.ApplyRoutes(app)
 		event.ApplyRoutes(app)
 		article.ApplyRoutes(app)
 	}

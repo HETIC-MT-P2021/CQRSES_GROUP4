@@ -3,6 +3,7 @@ package cqrs
 import (
 	"fmt"
 
+	"github.com/jibe0123/CQRSES_GROUP4/pkg/database"
 	"github.com/jibe0123/CQRSES_GROUP4/pkg/helper"
 )
 
@@ -39,11 +40,12 @@ func (bus *QueryBus) AddHandler(handler QueryHandler, Query interface{}) error {
 }
 
 // Dispatch Calls good Query process
-func (bus *QueryBus) Dispatch(Query Query) error {
+func (bus *QueryBus) Dispatch(Query Query) (interface{}, error) {
 	if handler, ok := bus.handlers[Query.Type()]; ok {
 		return handler.Handle(Query)
 	}
-	return fmt.Errorf("the Query bus does not have a handler for Querys of type: %s", Query.Type())
+	//return []database.Article{}, fmt.Errorf("the Query bus does not have a handler for Querys of type: %s", Query.Type())
+	return []database.Article{}, fmt.Errorf("the Query bus does not have a handler for Querys of type: %s", Query.Type())
 }
 
 // QueryImpl Overrides Query
@@ -51,8 +53,8 @@ type QueryImpl struct {
 	Query interface{}
 }
 
-// NewQuery Initialize an Query implementation
-func NewQuery(Query interface{}) *QueryImpl {
+// NewQueryImpl Initialize an Query implementation
+func NewQueryImpl(Query interface{}) *QueryImpl {
 	return &QueryImpl{
 		Query: Query,
 	}

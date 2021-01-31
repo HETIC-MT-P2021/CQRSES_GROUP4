@@ -1,4 +1,4 @@
 package queries
 
-// ReadArticleQuery Query to get articles
-type ReadArticleQuery struct{}
+// ReadArticlesQuery Query to get articles
+type ReadArticlesQuery struct{}
