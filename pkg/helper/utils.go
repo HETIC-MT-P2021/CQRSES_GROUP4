@@ -1,9 +1,9 @@
-package event
+package helper
 
 import (
 	"reflect"
 )
 
-func typeOf(i interface{}) string {
+func TypeOf(i interface{}) string {
 	return reflect.TypeOf(i).Elem().Name()
 }
