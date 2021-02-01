@@ -1,6 +1,6 @@
 package state
 
-import "github.com/jibe0123/CQRSES_GROUP4/event"
+import "github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
 
 var CurrentArticles *event.ArticlesAggregate
 

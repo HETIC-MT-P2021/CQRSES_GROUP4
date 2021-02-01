@@ -1,7 +1,7 @@
 package elasticsearch
 
 import (
-	db "github.com/jibe0123/CQRSES_GROUP4/pkg/database"
+	db "github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
 )
 
 type Repository interface {

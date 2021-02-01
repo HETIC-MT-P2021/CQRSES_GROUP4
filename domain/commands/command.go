@@ -1,4 +1,4 @@
-package domain
+package commands
 
 // CreateArticleCommand Command to create an article
 type CreateArticleCommand struct {

@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/jibe0123/CQRSES_GROUP4/cqrs"
-	"github.com/jibe0123/CQRSES_GROUP4/domain/queries"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/database"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cqrs"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/queries"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
 )
 
 type ReadArticlesQueryHandler struct{}

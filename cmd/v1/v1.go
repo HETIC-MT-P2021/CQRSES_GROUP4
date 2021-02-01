@@ -1,12 +1,12 @@
 package v1
 
 import (
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cmd/v1/article"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cmd/v1/auth"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cmd/v1/command"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cmd/v1/event"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cmd/v1/health_check"
 	"github.com/gin-gonic/gin"
-	"github.com/jibe0123/CQRSES_GROUP4/cmd/v1/article"
-	"github.com/jibe0123/CQRSES_GROUP4/cmd/v1/auth"
-	"github.com/jibe0123/CQRSES_GROUP4/cmd/v1/command"
-	"github.com/jibe0123/CQRSES_GROUP4/cmd/v1/event"
-	"github.com/jibe0123/CQRSES_GROUP4/cmd/v1/health_check"
 )
 
 func ApplyRoutes(r *gin.Engine) {

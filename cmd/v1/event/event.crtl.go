@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
+	db "github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/elasticsearch"
 	"github.com/gin-gonic/gin"
-	db "github.com/jibe0123/CQRSES_GROUP4/pkg/database"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/database/elasticsearch"
 	uuid "github.com/satori/go.uuid"
 )
 

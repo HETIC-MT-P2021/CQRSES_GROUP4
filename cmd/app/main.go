@@ -9,14 +9,13 @@ import (
 	"syscall"
 	"time"
 
+	v1 "github.com/HETIC-MT-P2021/CQRSES_GROUP4/cmd/v1"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/state"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
 	"github.com/gin-gonic/gin"
-	_ "github.com/jibe0123/CQRSES_GROUP4/api"
-	v1 "github.com/jibe0123/CQRSES_GROUP4/cmd/v1"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/database"
-	dmn "github.com/jibe0123/CQRSES_GROUP4/pkg/domain"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/domain/state"
-	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 // @title Survey documentation API
@@ -47,7 +46,7 @@ func main() {
 		log.Panic(err)
 	}
 
-	dmn.InitBusses()
+	domain.InitBusses()
 	state.InitState()
 	//tryConnectToElasticSearch()
 

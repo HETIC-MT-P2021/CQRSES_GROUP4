@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/jibe0123/CQRSES_GROUP4/cqrs"
-	commands "github.com/jibe0123/CQRSES_GROUP4/domain/commands"
-	"github.com/jibe0123/CQRSES_GROUP4/domain/events"
-	"github.com/jibe0123/CQRSES_GROUP4/event"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cqrs"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/commands"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/events"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
 )
 
 type CreateArticleCommandHandler struct {

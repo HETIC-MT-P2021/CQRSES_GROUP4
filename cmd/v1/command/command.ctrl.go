@@ -3,11 +3,11 @@ package command
 import (
 	"net/http"
 
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cqrs"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/commands"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg"
 	"github.com/gin-gonic/gin"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/cqrs"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/domain"
-	commands "github.com/jibe0123/CQRSES_GROUP4/pkg/domain/commands"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/helper"
 )
 
 type requestCommandName struct {
@@ -26,9 +26,9 @@ func CreateNewCommand(c *gin.Context) {
 	var command *cqrs.CommandImpl
 
 	switch req.Name {
-	case helper.TypeOf(&commands.CreateArticleCommand{}):
+	case pkg.TypeOf(&commands.CreateArticleCommand{}):
 		command = cqrs.NewCommandImpl(&commands.CreateArticleCommand{})
-	case helper.TypeOf(&commands.UpdateArticleCommand{}):
+	case pkg.TypeOf(&commands.UpdateArticleCommand{}):
 		command = cqrs.NewCommandImpl(&commands.UpdateArticleCommand{})
 	}
 

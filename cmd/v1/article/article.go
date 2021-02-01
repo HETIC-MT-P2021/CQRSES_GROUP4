@@ -1,8 +1,8 @@
 package article
 
 import (
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cmd/v1/auth"
 	"github.com/gin-gonic/gin"
-	"github.com/jibe0123/CQRSES_GROUP4/cmd/v1/auth"
 	jwt "github.com/kyfk/gin-jwt"
 )
 

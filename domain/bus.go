@@ -1,14 +1,14 @@
 package domain
 
 import (
-	"github.com/jibe0123/CQRSES_GROUP4/cqrs"
-	commands "github.com/jibe0123/CQRSES_GROUP4/domain/commands"
-	"github.com/jibe0123/CQRSES_GROUP4/domain/commands_handler"
-	"github.com/jibe0123/CQRSES_GROUP4/domain/events"
-	"github.com/jibe0123/CQRSES_GROUP4/domain/events_handler"
-	"github.com/jibe0123/CQRSES_GROUP4/domain/queries"
-	queries_handler "github.com/jibe0123/CQRSES_GROUP4/domain/queries_handler"
-	"github.com/jibe0123/CQRSES_GROUP4/event"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cqrs"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/commands"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/commands_handler"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/events"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/events_handler"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/queries"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/queries_handler"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
 )
 
 // EventBus Allow to stores all event on database

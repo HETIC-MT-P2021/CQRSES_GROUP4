@@ -3,7 +3,7 @@ package cqrs
 import (
 	"fmt"
 
-	"github.com/jibe0123/CQRSES_GROUP4/pkg"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg"
 )
 
 // CommandBus Contains handlers

@@ -4,11 +4,11 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cqrs"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/queries"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
 	"github.com/gin-gonic/gin"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/cqrs"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/database"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/domain"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/domain/queries"
 )
 
 // GetArticles from pkg/state/
