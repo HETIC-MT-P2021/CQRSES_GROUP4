@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/database/query"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/query"
 	"golang.org/x/crypto/bcrypt"
 )
 

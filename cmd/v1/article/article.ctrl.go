@@ -1,31 +1,30 @@
 package article
 
 import (
+	"log"
 	"net/http"
 
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cqrs"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/queries"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
 	"github.com/gin-gonic/gin"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/article"
-	db "github.com/jibe0123/CQRSES_GROUP4/pkg/database"
 )
 
-// GetArticles to do
+// GetArticles from pkg/state/
 func GetArticles(c *gin.Context) {
-	var req db.Article
-
-	if err := c.BindJSON(&req); err != nil {
-		c.JSON(http.StatusInternalServerError, err)
-		return
-	}
-
-	articles, err := article.UpdateArticle(req)
+	query := cqrs.NewQueryImpl(&queries.ReadArticlesQuery{})
+	articles, err := domain.QueryBus.Dispatch(query)
 	if err != nil {
-		c.JSON(http.StatusCreated, gin.H{
-			"events": "error",
+		log.Println(err)
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":  404,
+			"message": "Articles not fount",
 		})
 		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
-		"articles": articles.Articles(),
+		"articles": articles.([]database.Article),
 	})
 }

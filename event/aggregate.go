@@ -1,8 +1,8 @@
 package event
 
 import (
-	db "github.com/jibe0123/CQRSES_GROUP4/pkg/database"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/domain/events"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/events"
+	db "github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
 )
 
 // ArticlesAggregate aggregate.
@@ -30,17 +30,14 @@ func (aggr ArticlesAggregate) Articles() []db.Article {
 	return aggr.articles
 }
 
-// New creates a new ArticleAggregate from id, title and description.
-func New(id int, title string, description string) *ArticlesAggregate {
-	articles := &ArticlesAggregate{}
-
-	articles.raise(NewEventImpl(&events.ArticleCreatedEvent{
-		ID:          id,
-		Title:       title,
-		Description: description,
-	}))
-
-	return articles
+// NewEmpty creates an empty ArticleAggregate.
+func NewEmpty() *ArticlesAggregate {
+	aggr := &ArticlesAggregate{
+		articles: []db.Article{},
+		changes:  []Event{},
+		version:  0,
+	}
+	return aggr
 }
 
 // Events returns the uncommitted events from the ArticleAggregate aggregate.

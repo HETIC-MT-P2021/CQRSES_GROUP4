@@ -1,11 +1,10 @@
 package article
 
 import (
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/database"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/domain"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/domain/events"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/domain/state"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/event"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/events"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/state"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
 )
 
 func FakeEvents() []*event.EventImpl {
@@ -37,7 +36,7 @@ func FakeEvents() []*event.EventImpl {
 }
 
 func UpdateArticle(article database.Article) (*event.ArticlesAggregate, error) {
-	evs := FakeEvents()
+	/*evs := FakeEvents()
 	state.CurrentArticles = event.NewFromEvents(evs)
 
 	ev := event.NewEventImpl(&events.ArticleUpdatedEvent{
@@ -48,7 +47,7 @@ func UpdateArticle(article database.Article) (*event.ArticlesAggregate, error) {
 	err := domain.EventBus.Dispatch(ev)
 	if err != nil {
 		return &event.ArticlesAggregate{}, err
-	}
+	}*/
 
 	return state.CurrentArticles, nil
 }

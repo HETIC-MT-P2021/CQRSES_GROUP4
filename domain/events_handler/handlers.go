@@ -2,10 +2,12 @@ package events_handler
 
 import (
 	"errors"
+	"fmt"
+	"log"
 
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/domain/events"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/domain/state"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/event"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/events"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/state"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
 )
 
 type ArticleCreatedEventHandler struct{}
@@ -14,6 +16,8 @@ func (ch ArticleCreatedEventHandler) Handle(ev event.Event) error {
 
 	switch ev := ev.Payload().(type) {
 	case *events.ArticleCreatedEvent:
+		log.Println("here is event")
+		log.Println(ev)
 		aggr := state.CurrentArticles
 
 		err := aggr.Add(ev)
@@ -37,12 +41,13 @@ type ArticleUpdatedEventHandler struct{}
 func (ch ArticleUpdatedEventHandler) Handle(ev event.Event) error {
 	switch ev := ev.Payload().(type) {
 	case *events.ArticleUpdatedEvent:
-		aggr := state.CurrentArticles
+		fmt.Println(ev)
+		/*aggr := state.CurrentArticles
 
 		err := aggr.Update(1, ev)
 		if err != nil {
 			return err
-		}
+		}*/
 
 		// if no errors push on db
 		return nil

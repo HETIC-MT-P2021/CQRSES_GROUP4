@@ -1,9 +1,10 @@
 package health_check
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/database"
 	"log"
+
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
+	"github.com/gin-gonic/gin"
 )
 
 func HealthCheck(c *gin.Context) {

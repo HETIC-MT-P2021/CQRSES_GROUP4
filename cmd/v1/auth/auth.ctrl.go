@@ -3,8 +3,8 @@ package auth
 import (
 	"net/http"
 
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
 	"github.com/gin-gonic/gin"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/database"
 	jwt "github.com/kyfk/gin-jwt"
 	"golang.org/x/crypto/bcrypt"
 )
