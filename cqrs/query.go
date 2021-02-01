@@ -3,8 +3,8 @@ package cqrs
 import (
 	"fmt"
 
+	"github.com/jibe0123/CQRSES_GROUP4/pkg"
 	"github.com/jibe0123/CQRSES_GROUP4/pkg/database"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/helper"
 )
 
 // QueryBus Contains handlers
@@ -29,7 +29,7 @@ func NewQueryBus() *QueryBus {
 
 // AddHandler to bus
 func (bus *QueryBus) AddHandler(handler QueryHandler, Query interface{}) error {
-	typeName := helper.TypeOf(Query)
+	typeName := pkg.TypeOf(Query)
 	if _, ok := bus.handlers[typeName]; ok {
 		return fmt.Errorf("duplicate Query handler registration with Query bus for Query of type: %s", typeName)
 	}
@@ -62,7 +62,7 @@ func NewQueryImpl(Query interface{}) *QueryImpl {
 
 // Type Returns event type
 func (c *QueryImpl) Type() string {
-	return helper.TypeOf(c.Query)
+	return pkg.TypeOf(c.Query)
 }
 
 // Payload returns the actual Query payload of the message.

@@ -1,19 +1,12 @@
 package article
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/jibe0123/CQRSES_GROUP4/cmd/v1/auth"
+	jwt "github.com/kyfk/gin-jwt"
+)
 
 func ApplyRoutes(r *gin.RouterGroup) {
-	/*auth, err := NewAuth()
-
-	if err != nil {
-		log.Print(err)
-	}*/
-
-	// r.Use(jwt.ErrorHandler)
-	r.GET("/articles", GetArticles)
-
-	/*authRouter := r.Group("/auth")
-	{
-		authRouter.POST("/register", Register)
-	}*/
+	r.Use(jwt.ErrorHandler)
+	r.GET("/articles", auth.Operator(auth.Auth), GetArticles)
 }

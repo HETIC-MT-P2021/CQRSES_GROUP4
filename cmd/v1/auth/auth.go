@@ -7,16 +7,17 @@ import (
 	jwt "github.com/kyfk/gin-jwt"
 )
 
-func ApplyRoutes(r *gin.RouterGroup) {
-	auth, err := NewAuth()
+var Auth jwt.Auth
 
+func ApplyRoutes(r *gin.RouterGroup) {
+	Auth, err := NewAuth()
 	if err != nil {
-		log.Print(err)
+		log.Println(err)
 	}
 
 	r.Use(jwt.ErrorHandler)
-	r.POST("/login", auth.Authenticate)
-	r.POST("/auth/refresh_token", auth.RefreshToken)
+	r.POST("/login", Auth.Authenticate)
+	r.POST("/auth/refresh_token", Auth.RefreshToken)
 
 	authRouter := r.Group("/auth")
 	{

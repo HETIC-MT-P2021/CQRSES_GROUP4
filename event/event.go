@@ -3,7 +3,7 @@ package event
 import (
 	"fmt"
 
-	helper "github.com/jibe0123/CQRSES_GROUP4/pkg/helper"
+	"github.com/jibe0123/CQRSES_GROUP4/pkg"
 )
 
 // EventBus Contains handlers
@@ -28,7 +28,7 @@ func NewEventBus() *EventBus {
 
 // AddHandler to bus
 func (eventBus EventBus) AddHandler(handler EventHandler, event interface{}) error {
-	typeName := helper.TypeOf(event)
+	typeName := pkg.TypeOf(event)
 	if _, ok := eventBus.handlers[typeName]; ok {
 		return fmt.Errorf("Event handler already exists")
 	}
@@ -59,7 +59,7 @@ func NewEventImpl(eventContent interface{}) *EventImpl {
 
 // Type Returns event type
 func (event EventImpl) Type() string {
-	return helper.TypeOf(event.Content)
+	return pkg.TypeOf(event.Content)
 }
 
 // Payload Returns event content

@@ -3,7 +3,7 @@ package cqrs
 import (
 	"fmt"
 
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/helper"
+	"github.com/jibe0123/CQRSES_GROUP4/pkg"
 )
 
 // CommandBus Contains handlers
@@ -28,7 +28,7 @@ func NewCommandBus() *CommandBus {
 
 // AddHandler to bus
 func (bus *CommandBus) AddHandler(handler CommandHandler, command interface{}) error {
-	typeName := helper.TypeOf(command)
+	typeName := pkg.TypeOf(command)
 	if _, ok := bus.handlers[typeName]; ok {
 		return fmt.Errorf("duplicate command handler registration with command bus for command of type: %s", typeName)
 	}
@@ -60,7 +60,7 @@ func NewCommandImpl(command interface{}) *CommandImpl {
 
 // Type Returns event type
 func (c *CommandImpl) Type() string {
-	return helper.TypeOf(c.command)
+	return pkg.TypeOf(c.command)
 }
 
 // Payload returns the actual command payload of the message.

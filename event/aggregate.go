@@ -1,8 +1,8 @@
 package event
 
 import (
+	"github.com/jibe0123/CQRSES_GROUP4/domain/events"
 	db "github.com/jibe0123/CQRSES_GROUP4/pkg/database"
-	"github.com/jibe0123/CQRSES_GROUP4/pkg/domain/events"
 )
 
 // ArticlesAggregate aggregate.
