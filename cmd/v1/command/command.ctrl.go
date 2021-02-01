@@ -11,7 +11,14 @@ import (
 )
 
 type requestCommandName struct {
-	Name string
+	Name    string
+	Payload payload
+}
+
+type payload struct {
+	ID          int
+	Title       string
+	Description string
 }
 
 // CreateNewCommand Allows to calls Command to manage article
@@ -27,7 +34,11 @@ func CreateNewCommand(c *gin.Context) {
 
 	switch req.Name {
 	case pkg.TypeOf(&commands.CreateArticleCommand{}):
-		command = cqrs.NewCommandImpl(&commands.CreateArticleCommand{})
+		command = cqrs.NewCommandImpl(&commands.CreateArticleCommand{
+			ID:          req.Payload.ID,
+			Title:       req.Payload.Title,
+			Description: req.Payload.Description,
+		})
 	case pkg.TypeOf(&commands.UpdateArticleCommand{}):
 		command = cqrs.NewCommandImpl(&commands.UpdateArticleCommand{})
 	}

@@ -17,10 +17,13 @@ type CreateArticleCommandHandler struct {
 func (eh CreateArticleCommandHandler) Handle(command cqrs.Command) error {
 	switch cmd := command.Payload().(type) {
 	case *commands.CreateArticleCommand:
-		fmt.Println("Handler.")
-		fmt.Println(cmd)
-
-		event := event.NewEventImpl(&events.ArticleCreatedEvent{})
+		var articleCreatedEvent *events.ArticleCreatedEvent
+		articleCreatedEvent = &events.ArticleCreatedEvent{
+			ID:          cmd.ID,
+			Title:       cmd.Title,
+			Description: cmd.Description,
+		}
+		event := event.NewEventImpl(articleCreatedEvent)
 		err := eh.eventBus.Dispatch(event)
 		if err != nil {
 			return err
