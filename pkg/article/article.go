@@ -11,19 +11,19 @@ func FakeEvents() []*event.EventImpl {
 	var evs []*event.EventImpl
 
 	createdEventID1 := event.NewEventImpl(&events.ArticleCreatedEvent{
-		ID:          0,
+		ID:          "0",
 		Title:       "test",
 		Description: "yes",
 	})
 
 	createdEventID2 := event.NewEventImpl(&events.ArticleCreatedEvent{
-		ID:          1,
+		ID:          "1",
 		Title:       "test",
 		Description: "yes",
 	})
 
 	updatedEvent := event.NewEventImpl(&events.ArticleUpdatedEvent{
-		ID:          0,
+		ID:          "0",
 		Title:       "test updated",
 		Description: "yes updated",
 	})

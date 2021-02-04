@@ -106,9 +106,9 @@ func (aggr *ArticlesAggregate) On(ev *EventImpl, new bool) {
 }
 
 // ReplaceElementAt Replace article by another at a specified index
-func (aggr *ArticlesAggregate) ReplaceElementAt(index int, newArticle db.Article) {
+func (aggr *ArticlesAggregate) ReplaceElementAt(id string, newArticle db.Article) {
 	for i, article := range aggr.articles {
-		if article.ID == index {
+		if article.ID == id {
 			aggr.articles[i] = newArticle
 			break
 		}

@@ -2,19 +2,45 @@ package elasticsearch
 
 import (
 	"context"
-	"fmt"
+	"errors"
+	"time"
 
-	db "github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
 	elastic "github.com/olivere/elastic/v7"
 )
 
+// ElasticRepository implements repository interface
 type ElasticRepository struct {
 	client *elastic.Client
 }
 
-func NewElastic(url string) (*ElasticRepository, error) {
-	fmt.Println("url printed " + url)
+// Close closes database
+func (r *ElasticRepository) Close() {
+}
 
+const (
+	clientURL           = "http://elasticsearch:9200"
+	numberOftries       = 5
+	timeToWaitInSeconds = 3
+)
+
+// MakeConnection Establish a connection with elastic client
+func MakeConnection() error {
+	var err error
+	for index := 0; index <= numberOftries; index++ {
+		es, err := newElastic(clientURL)
+		if err != nil {
+			time.Sleep(timeToWaitInSeconds * time.Second)
+		} else {
+			setRepository(es)
+			break
+		}
+	}
+
+	return err
+}
+
+// newElastic inits new elastic client with some default params
+func newElastic(url string) (*ElasticRepository, error) {
 	client, err := elastic.NewClient(
 		elastic.SetURL(url),
 		elastic.SetSniff(false),
@@ -28,43 +54,61 @@ func NewElastic(url string) (*ElasticRepository, error) {
 	return &ElasticRepository{client}, nil
 }
 
-func (r *ElasticRepository) Close() {
+// SetUpIndexes Creates needed indexes to make POST request
+// @see mapping.go
+func (r *ElasticRepository) SetUpIndexes() error {
+	err := r.isClientReady(clientURL)
+	if err != nil {
+		return err
+	}
+
+	err = r.createIndexIfNotExists(indexReadModel)
+	if err != nil {
+		return err
+	}
+
+	err = r.createIndexIfNotExists(indexEventStore)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (r *ElasticRepository) StoreEvent(event db.Event) error {
+// isClientReady Checks if client is ready by send packet using ping
+func (r *ElasticRepository) isClientReady(clientURL string) error {
 	ctx := context.Background()
 
-	_, err := r.client.Index().
-		Index("hetic").
-		Type("events").
-		Id(event.ID).
-		BodyJson(event).
-		Refresh("wait_for").
-		Do(ctx)
+	var err error
+	for index := 0; index <= numberOftries; index++ {
+		_, _, err := r.client.Ping(clientURL).Do(ctx)
+		if err != nil {
+			time.Sleep(timeToWaitInSeconds * time.Second)
+		} else {
+			break
+		}
+	}
+
 	return err
 }
 
-func (r *ElasticRepository) LoadEvents() ([]db.Event, error) {
-	search := search{
-		Ctx:             context.Background(),
-		Client:          r.client,
-		SearchKey:       "event_name",
-		SearchThisValue: "ArticleCreatedEvent",
-	}
-	searchSource, err := search.initSearch()
+// createIndexIfNotExists on elasticsearch database
+func (r *ElasticRepository) createIndexIfNotExists(indexName string) error {
+	ctx := context.Background()
+
+	exists, err := r.client.IndexExists(indexName).Do(ctx)
 	if err != nil {
-		return []db.Event{}, err
+		return err
+	}
+	if !exists {
+		createIndex, err := r.client.CreateIndex(indexName).BodyString(mapping[indexName]).Do(ctx)
+		if err != nil {
+			return err
+		}
+		if !createIndex.Acknowledged {
+			return errors.New("Index not acknowledged")
+		}
 	}
 
-	searchResult, err := search.doSearch(searchSource)
-	if err != nil {
-		return []db.Event{}, err
-	}
-
-	events, err := search.unmarshallEvents(searchResult)
-	if err != nil {
-		return []db.Event{}, err
-	}
-
-	return events, nil
+	return nil
 }

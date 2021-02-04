@@ -13,6 +13,7 @@ import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/state"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/elasticsearch"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
@@ -48,7 +49,20 @@ func main() {
 
 	domain.InitBusses()
 	state.InitState()
-	//tryConnectToElasticSearch()
+
+	err := elasticsearch.MakeConnection()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	err = elasticsearch.SetUpIndexes()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	defer elasticsearch.Close()
 
 	url := ginSwagger.URL("http://localhost:8080/swagger/doc.json") // The url pointing to API definition
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
@@ -85,18 +99,3 @@ func main() {
 
 	log.Println("Server exited")
 }
-
-/*
-func tryConnectToElasticSearch() {
-	for index := 0; index <= 5; index++ {
-		es, err := elasticsearch.NewElastic(fmt.Sprintf("http://%s", "elasticsearch:9200"))
-		if err != nil {
-			log.Println(err)
-			time.Sleep(3)
-		} else {
-			fmt.Println("You're connected to elastic search...")
-			elasticsearch.SetRepository(es)
-		}
-	}
-	defer elasticsearch.Close()
-}*/
