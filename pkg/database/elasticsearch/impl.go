@@ -21,7 +21,7 @@ func (r *ElasticRepository) Close() {
 
 const (
 	clientURL           = "http://elasticsearch:9200"
-	numberOftries       = 8
+	numberOftries       = 10
 	timeToWaitInSeconds = 3
 )
 
