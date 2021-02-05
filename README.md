@@ -2,8 +2,13 @@
 
 ## Where am I ? 💡
 
-This app allows you to build in a easy and fast way a go project using the combination of CQRS and EventSourcing patterns.
+This app allows you to build in a easy and fast way a go project using the combination of CQRS and EventSourcing patterns. It is built by the Group 4 of the MT5-P2021 team in Hétic.
 
+* To submit bug reports and feature suggestions, or track changes:
+   https://github.com/HETIC-MT-P2021/CQRSES_GROUP4/issues
+   
+Don't forget to read/use commits and PR conventions before doing any change !
+   
 ## Health check ❤️
 
 **Request:**
