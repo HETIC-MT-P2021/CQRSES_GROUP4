@@ -65,12 +65,14 @@ func (r *ElasticRepository) SetUpIndexes() error {
 		return err
 	}
 
+	// check if read-model exists on elastic
 	err = r.createIndexIfNotExists(indexReadModel)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 
+	// check if event-store exists on elastic
 	err = r.createIndexIfNotExists(indexEventStore)
 	if err != nil {
 		return err

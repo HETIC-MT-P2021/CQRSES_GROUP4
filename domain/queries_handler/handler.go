@@ -18,7 +18,8 @@ func (ch ReadArticlesQueryHandler) Handle(query cqrs.Query) (interface{}, error)
 	case *queries.ReadArticlesQuery:
 		fmt.Println(qu)
 
-		articles, err := elasticsearch.GetReadmodel("c9c0c338-8d4b-4cfc-9f18-3fbfff3516m5")
+		// pass aggregate_article_id
+		articles, err := elasticsearch.GetReadmodel("")
 		if err != nil {
 			log.Println(err)
 			return []database.Article{}, err
