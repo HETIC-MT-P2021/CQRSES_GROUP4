@@ -1,12 +1,16 @@
 package elasticsearch
 
+import "os"
+
 var mapping map[string]string = map[string]string{
 	indexReadModel:  readModelMapping,
 	indexEventStore: eventStoreMapping,
 }
 
-const indexReadModel = "read-model"
+var indexReadModel = os.Getenv("INDEX_READ_MODEL")
+
 const readModelMapping = ""
 
-const indexEventStore = "event-store"
+var indexEventStore = os.Getenv("INDEX_EVENT_STORE")
+
 const eventStoreMapping = ""
