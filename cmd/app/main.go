@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/Messager"
 	"log"
 	"net/http"
 	"os"
@@ -44,6 +45,10 @@ func main() {
 	router := gin.Default()
 
 	if err := database.Connect(); err != nil {
+		log.Panic(err)
+	}
+
+	if err := Messager.InitBroker(); err != nil {
 		log.Panic(err)
 	}
 

@@ -10,6 +10,7 @@ require (
 	github.com/kyfk/gin-jwt v0.0.0-20191024073357-fd8387d8d220
 	github.com/olivere/elastic/v7 v7.0.22
 	github.com/satori/go.uuid v1.2.0
+	github.com/streadway/amqp v1.0.0
 	github.com/swaggo/gin-swagger v1.3.0
 	github.com/swaggo/swag v1.7.0
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad

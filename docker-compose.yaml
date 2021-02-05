@@ -1,22 +1,22 @@
 version: "3.8"
 services:
   # Db mysql
-#  db:
-#    image: mysql:8
-#    restart: always
-#    command: --default-authentication-plugin=mysql_native_password
-#    ports:
-#      - "3306:3306"
-#    environment:
-#      MYSQL_USER: goproject
-#      MYSQL_PASSWORD: goproject
-#      MYSQL_DATABASE: app
-#      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
-#      DB_HOST: tcp(db:3306)
-#    volumes:
-#      - ./docker/data:/docker-entrypoint-initdb.d
-#    networks:
-#      - backend
+  db:
+    image: mysql:8
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: goproject
+      MYSQL_PASSWORD: goproject
+      MYSQL_DATABASE: app
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      DB_HOST: tcp(db:3306)
+    volumes:
+      - ./docker/data:/docker-entrypoint-initdb.d
+    networks:
+      - backend
 
   # Api Service
   api:
@@ -31,6 +31,7 @@ services:
       MYSQL_PASSWORD: goproject
       MYSQL_DATABASE: app
       DB_HOST: tcp(db:3306)
+      AMQP_URL: "amqp://rabbitmq:rabbitmq@rabbitmq:5672"
     ports:
       - "8080:8080"
     volumes:
@@ -47,7 +48,7 @@ services:
       - discovery.type=single-node
       - node.name=elasticsearch
       - cluster.name=docker-cluster
-    #  - cluster.initial_master_nodes=elasticsearch
+      #  - cluster.initial_master_nodes=elasticsearch
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
       - http.cors.enabled=true
@@ -113,7 +114,6 @@ services:
       #volumes:
       #- './enabled_plugins:/etc/rabbitmq/enabled_plugins'
       #- './rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro'
-
 
 volumes:
   esdata1:
