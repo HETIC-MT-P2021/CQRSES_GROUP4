@@ -1,22 +1,22 @@
 version: "3.8"
 services:
   # Db mysql
-  db:
-    image: mysql:8
-    restart: always
-    command: --default-authentication-plugin=mysql_native_password
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_USER: goproject
-      MYSQL_PASSWORD: goproject
-      MYSQL_DATABASE: app
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
-      DB_HOST: tcp(db:3306)
-    volumes:
-      - ./docker/data:/docker-entrypoint-initdb.d
-    networks:
-      - backend
+#  db:
+#    image: mysql:8
+#    restart: always
+#    command: --default-authentication-plugin=mysql_native_password
+#    ports:
+#      - "3306:3306"
+#    environment:
+#      MYSQL_USER: goproject
+#      MYSQL_PASSWORD: goproject
+#      MYSQL_DATABASE: app
+#      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+#      DB_HOST: tcp(db:3306)
+#    volumes:
+#      - ./docker/data:/docker-entrypoint-initdb.d
+#    networks:
+#      - backend
 
   # Api Service
   api:
@@ -96,6 +96,24 @@ services:
   #   networks:
   #     - elastic
   #     - ingress
+
+  rabbitmq:
+    image: 'rabbitmq:3-management'
+    container_name: rabbitmq
+    hostname: 'rabbitmq'
+    environment:
+      RABBITMQ_DEFAULT_USER: 'rabbitmq'
+      RABBITMQ_DEFAULT_PASS: 'rabbitmq'
+      RABBITMQ_DEFAULT_VHOST: '/'
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+    labels:
+      NAME: 'rabbitmq'
+      #volumes:
+      #- './enabled_plugins:/etc/rabbitmq/enabled_plugins'
+      #- './rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro'
+
 
 volumes:
   esdata1:
