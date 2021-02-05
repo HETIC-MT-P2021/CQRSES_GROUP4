@@ -3,6 +3,8 @@ package elasticsearch
 import (
 	"context"
 	"errors"
+	"fmt"
+	"log"
 	"time"
 
 	elastic "github.com/olivere/elastic/v7"
@@ -19,7 +21,7 @@ func (r *ElasticRepository) Close() {
 
 const (
 	clientURL           = "http://elasticsearch:9200"
-	numberOftries       = 5
+	numberOftries       = 8
 	timeToWaitInSeconds = 3
 )
 
@@ -59,11 +61,13 @@ func newElastic(url string) (*ElasticRepository, error) {
 func (r *ElasticRepository) SetUpIndexes() error {
 	err := r.isClientReady(clientURL)
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 
 	err = r.createIndexIfNotExists(indexReadModel)
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 
@@ -98,9 +102,12 @@ func (r *ElasticRepository) createIndexIfNotExists(indexName string) error {
 
 	exists, err := r.client.IndexExists(indexName).Do(ctx)
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 	if !exists {
+		fmt.Println("key not exists")
+
 		createIndex, err := r.client.CreateIndex(indexName).BodyString(mapping[indexName]).Do(ctx)
 		if err != nil {
 			return err
