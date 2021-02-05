@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	db "github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/elasticsearch"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
@@ -27,24 +27,25 @@ func GetEvents(c *gin.Context) {
 
 // CreateEvent in elasticsearch database
 func CreateEvent(c *gin.Context) {
-	var req db.RequestCreate
+	var req database.RequestCreateEvent
 
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
 
-	id := uuid.NewV4()
+	eventID := uuid.NewV4()
+	aggregateArticleID := uuid.NewV4()
 
 	currentDate := time.Now()
 	timestamp := currentDate.Unix()
 
-	event := db.Event{
-		ID:        id.String(),
-		EventName: "ArticleCreatedEvent",
+	event := database.Event{
+		ID:        eventID.String(),
+		EventType: req.EventType,
 		CreatedAt: strconv.FormatInt(timestamp, 10),
-		Payload: db.Article{
-			ID:          2,
+		Payload: database.Article{
+			ID:          aggregateArticleID.String(),
 			Title:       req.Title,
 			Description: req.Description,
 		},
@@ -57,7 +58,8 @@ func CreateEvent(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
-		"status": "created",
-		"id":     id.String(),
+		"status":               "event created",
+		"event_id":             eventID.String(),
+		"aggregate_article_id": aggregateArticleID.String(),
 	})
 }

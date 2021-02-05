@@ -16,7 +16,7 @@ type requestCommandName struct {
 }
 
 type payload struct {
-	ID          int
+	ID          string
 	Title       string
 	Description string
 }

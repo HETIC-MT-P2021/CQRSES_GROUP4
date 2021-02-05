@@ -16,7 +16,6 @@ func (ch ArticleCreatedEventHandler) Handle(ev event.Event) error {
 
 	switch ev := ev.Payload().(type) {
 	case *events.ArticleCreatedEvent:
-		log.Println("here is event")
 		log.Println(ev)
 		aggr := state.CurrentArticles
 

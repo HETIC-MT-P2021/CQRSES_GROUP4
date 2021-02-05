@@ -25,6 +25,8 @@ services:
       dockerfile: ./build/Dockerfile-app
     environment:
       API_PORT: "8080"
+      INDEX_READ_MODEL: "read-model"
+      INDEX_EVENT_STORE: "event-store"
       MYSQL_USER: goproject
       MYSQL_PASSWORD: goproject
       MYSQL_DATABASE: app
