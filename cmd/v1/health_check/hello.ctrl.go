@@ -1,4 +1,4 @@
-package health_check
+package healthcheck
 
 import (
 	"log"
@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// HealthCheck Checks database is running
 func HealthCheck(c *gin.Context) {
 	log.Print(database.DbConn)
 	c.JSON(200, gin.H{

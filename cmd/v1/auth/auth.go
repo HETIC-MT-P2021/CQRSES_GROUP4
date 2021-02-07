@@ -7,8 +7,10 @@ import (
 	jwt "github.com/kyfk/gin-jwt"
 )
 
+// Auth Instance
 var Auth jwt.Auth
 
+// ApplyRoutes All routes from authentification
 func ApplyRoutes(r *gin.RouterGroup) {
 	Auth, err := NewAuth()
 	if err != nil {
