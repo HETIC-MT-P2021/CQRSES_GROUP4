@@ -48,11 +48,9 @@ func main() {
 		log.Panic(err)
 	}
 
-	if err := Messager.InitBroker(); err != nil {
+	if err := Messager.ConnectToRabbitMQ(); err != nil {
 		log.Panic(err)
 	}
-
-	log.Print("RABBITMQ CONNECTED", Messager.Messaging.Connection.IsClosed())
 
 	domain.InitBusses()
 	state.InitState()

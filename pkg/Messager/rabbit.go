@@ -1,48 +1,73 @@
 package Messager
 
 import (
+	"fmt"
+	"github.com/caarlos0/env/v6"
 	"github.com/streadway/amqp"
-	"log"
 	"time"
 )
 
-type Broker struct {
-	Channel    *amqp.Channel
-	Connection *amqp.Connection
-}
-
-var Messaging *Broker
-
-const (
-	attemptsRabbitConnexion = 10
-	waitForConnexion        = 5
+var (
+	//RabbitMQChan is a pointer to a rabbitmq channel
+	RabbitMQChan *amqp.Channel
+	//RabbitMQQueue is a rabbitmq queue
+	RabbitMQQueue amqp.Queue
 )
 
-func InitBroker() (error error) {
+//RBMQQueuecreation is a rabbitmq model
+type RBMQQueuecreation struct {
+	RabbitMQChan  *amqp.Channel
+	RabbitMQQueue amqp.Queue
+}
 
-	// url := os.Getenv("AMQP_URL")
+//RabbitMqEnv contains rabbitmq env credentials
+type RabbitMqEnv struct {
+	RabbitMqHost string `env:"RABBITMQ_HOST"`
+	RabbitMqPort string `env:"RABBITMQ_PORT"`
+	RabbitMqUser string `env:"RABBITMQ_DEFAULT_USER"`
+	RabbitMqPass string `env:"RABBITMQ_DEFAULT_PASS"`
+}
 
-	for index := 1; index <= attemptsRabbitConnexion; index++ {
-		conn, err := amqp.Dial("amqp://guest:guest@rabbitmq:5672/")
-		if err != nil {
-			log.Print(err, "Failed to connect to RabbitMQ")
-			time.Sleep(waitForConnexion * time.Second)
-			continue
-		} else {
-			log.Print("conn", conn)
-			log.Print("err", err)
-			Messaging.Connection = conn
+//ConnectToRabbitMQ is for connecting to rabbitmq
+func ConnectToRabbitMQ() error {
+	time.Sleep(50 * time.Second)
 
-			ch, err := conn.Channel()
-			if err == nil {
-				log.Print(err, "Failed to connect to RabbitMQ")
-			}
-			Messaging.Channel = ch
-		}
-		break
+	cfg := RabbitMqEnv{}
+	if err := env.Parse(&cfg); err != nil {
+		return fmt.Errorf("failed to parse env: %v", err)
 	}
 
-	defer Messaging.Connection.Close()
-	defer Messaging.Channel.Close()
+	urlConn := fmt.Sprintf("amqp://%s:%s@%s:%s/",
+		cfg.RabbitMqPass,
+		cfg.RabbitMqUser,
+		cfg.RabbitMqHost,
+		cfg.RabbitMqPort,
+	)
+
+	conn, err := amqp.Dial(urlConn)
+	if err != nil {
+		return fmt.Errorf("failed to connect to RabbitMQ: %v", err)
+	}
+
+	ch, err := conn.Channel()
+	if err != nil {
+		return fmt.Errorf("failed to open a channel: %v", err)
+	}
+
+	q, err := ch.QueueDeclare(
+		"hello", // name
+		false,   // durable
+		false,   // delete when unused
+		false,   // exclusive
+		false,   // no-wait
+		nil,     // arguments
+	)
+	if err != nil {
+		return fmt.Errorf("failed to declare a queue: %v", err)
+	}
+
+	RabbitMQChan = ch
+	RabbitMQQueue = q
+
 	return nil
 }

@@ -31,9 +31,13 @@ services:
       MYSQL_PASSWORD: goproject
       MYSQL_DATABASE: app
       DB_HOST: tcp(db:3306)
-      AMQP_URL: "amqp://guest:guest@rabbitmq:5672/"
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_ERLANG_COOKIE: rabbitmq_cookie
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_PORT: 5672
     depends_on:
-      - rabbit
+      - rabbitmq
     ports:
       - "8080:8080"
     volumes:
@@ -100,12 +104,21 @@ services:
   #     - elastic
   #     - ingress
 
-  rabbit:
-    container_name: rabbitmq
-    image: rabbitmq:3-management
+  rabbitmq:
+    hostname: rabbitmq
+    image: rabbitmq:3-management-alpine
+    container_name: cqrs-rabbitmq
+    volumes:
+      - ./.docker/rabbitmq/etc/:/etc/rabbitmq/
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_ERLANG_COOKIE: rabbitmq_cookie
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_PORT: 5672
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - 5672:5672
+      - 15672:15672
     networks:
       - backend
 

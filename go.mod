@@ -5,6 +5,7 @@ go 1.13
 require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/caarlos0/env v3.5.0+incompatible
+	github.com/caarlos0/env/v6 v6.5.0
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/kyfk/gin-jwt v0.0.0-20191024073357-fd8387d8d220
