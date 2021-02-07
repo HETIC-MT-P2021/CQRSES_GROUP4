@@ -13,13 +13,13 @@ import (
 
 type ReadArticlesQueryHandler struct{}
 
-func (ch ReadArticlesQueryHandler) Handle(query cqrs.Query) (interface{}, error) {
+func (qHandler ReadArticlesQueryHandler) Handle(query cqrs.Query) (interface{}, error) {
 	switch qu := query.Payload().(type) {
-	case *queries.ReadArticlesQuery:
+	case *queries.ReadArticleQuery:
 		fmt.Println(qu)
 
-		// pass aggregate_article_id
-		articles, err := elasticsearch.GetReadmodel("")
+		aggregateArticleID := query.Payload().(*queries.ReadArticleQuery).AggregateArticleID
+		articles, err := elasticsearch.GetReadmodel(aggregateArticleID)
 		if err != nil {
 			log.Println(err)
 			return []database.Article{}, err

@@ -6,7 +6,6 @@ import (
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cqrs"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/commands"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/events"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
 )
 
@@ -14,20 +13,11 @@ type CreateArticleCommandHandler struct {
 	eventBus *event.EventBus
 }
 
-func (eh CreateArticleCommandHandler) Handle(command cqrs.Command) error {
+func (cHandler CreateArticleCommandHandler) Handle(command cqrs.Command) error {
 	switch cmd := command.Payload().(type) {
 	case *commands.CreateArticleCommand:
-		var articleCreatedEvent *events.ArticleCreatedEvent
-		articleCreatedEvent = &events.ArticleCreatedEvent{
-			ID:          cmd.ID,
-			Title:       cmd.Title,
-			Description: cmd.Description,
-		}
-		event := event.NewEventImpl(articleCreatedEvent)
-		err := eh.eventBus.Dispatch(event)
-		if err != nil {
-			return err
-		}
+		fmt.Println(cmd)
+		// Call QueueConnector
 
 		return nil
 	default:
@@ -41,13 +31,15 @@ func NewCreateArticleCommandHandler(eventBus *event.EventBus) *CreateArticleComm
 	}
 }
 
-type UpdateArticleCommandHandler struct{}
+type UpdateArticleCommandHandler struct {
+	eventBus *event.EventBus
+}
 
-func (ch UpdateArticleCommandHandler) Handle(command cqrs.Command) error {
+func (cHandler UpdateArticleCommandHandler) Handle(command cqrs.Command) error {
 	switch cmd := command.Payload().(type) {
-	case *commands.CreateArticleCommand:
-		fmt.Println("Handler.")
+	case *commands.UpdateArticleCommand:
 		fmt.Println(cmd)
+		// Call QueueConnector
 	default:
 		return errors.New("bad command type")
 	}
@@ -55,6 +47,6 @@ func (ch UpdateArticleCommandHandler) Handle(command cqrs.Command) error {
 	return nil
 }
 
-func NewUpdateArticleCommandHandler() *UpdateArticleCommandHandler {
+func NewUpdateArticleCommandHandler(eventBus *event.EventBus) *UpdateArticleCommandHandler {
 	return &UpdateArticleCommandHandler{}
 }

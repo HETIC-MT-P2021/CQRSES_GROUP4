@@ -38,12 +38,12 @@ func initCommandBus() {
 	// Initialize command bus and all commands available in application
 	CommandBus = cqrs.NewCommandBus()
 	_ = CommandBus.AddHandler(commands_handler.NewCreateArticleCommandHandler(eventBus), &commands.CreateArticleCommand{})
-	_ = CommandBus.AddHandler(commands_handler.NewCreateArticleCommandHandler(eventBus), &commands.UpdateArticleCommand{})
+	_ = CommandBus.AddHandler(commands_handler.NewUpdateArticleCommandHandler(eventBus), &commands.UpdateArticleCommand{})
 }
 
 func initQueryBus() {
 	// Initialize query bus and all queries available in application
 	QueryBus = cqrs.NewQueryBus()
-	_ = QueryBus.AddHandler(queries_handler.NewReadArticlesQueryHandler(), &queries.ReadArticlesQuery{})
+	_ = QueryBus.AddHandler(queries_handler.NewReadArticlesQueryHandler(), &queries.ReadArticleQuery{})
 
 }

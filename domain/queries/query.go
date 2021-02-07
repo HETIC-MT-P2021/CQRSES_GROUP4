@@ -1,4 +1,6 @@
 package queries
 
-// ReadArticlesQuery Query to get articles
-type ReadArticlesQuery struct{}
+// ReadArticleQuery Query to get one article
+type ReadArticleQuery struct {
+	AggregateArticleID string `json:"aggregate_article_id"`
+}
