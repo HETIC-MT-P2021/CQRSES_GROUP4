@@ -41,8 +41,7 @@ func ConnectToRabbitMQ() error {
 		cfg.RabbitMqPass,
 		cfg.RabbitMqUser,
 		cfg.RabbitMqHost,
-		cfg.RabbitMqPort,
-	)
+		cfg.RabbitMqPort)
 
 	conn, err := amqp.Dial(urlConn)
 	if err != nil {
