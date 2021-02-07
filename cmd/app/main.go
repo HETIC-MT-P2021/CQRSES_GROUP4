@@ -11,7 +11,6 @@ import (
 
 	v1 "github.com/HETIC-MT-P2021/CQRSES_GROUP4/cmd/v1"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/state"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/elasticsearch"
 	"github.com/gin-gonic/gin"
@@ -48,7 +47,6 @@ func main() {
 	}
 
 	domain.InitBusses()
-	state.InitState()
 
 	err := elasticsearch.MakeConnection()
 	if err != nil {

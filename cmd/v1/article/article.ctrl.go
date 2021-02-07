@@ -74,7 +74,6 @@ func UpdateArticle(c *gin.Context) {
 	aggregateArticleID := c.Param("aggregate_article_id")
 
 	var req database.Article
-
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return
