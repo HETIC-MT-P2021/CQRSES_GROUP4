@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cqrs"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/messager"
 )
 
 // CreateArticleCommandHandler allows to create an article
@@ -16,8 +17,12 @@ func (cHandler CreateArticleCommandHandler) Handle(command cqrs.Command) error {
 	case *CreateArticleCommand:
 		fmt.Println(cmd)
 		// Call QueueConnector
+		connector, err := messager.ConnectToRabbitMQ()
+		if err != nil {
+			return err
+		}
 
-		return nil
+		return connector.Publish()
 	default:
 		return errors.New("bad command type")
 	}

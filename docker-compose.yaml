@@ -54,7 +54,6 @@ services:
       - discovery.type=single-node
       - node.name=elasticsearch
       - cluster.name=docker-cluster
-      #  - cluster.initial_master_nodes=elasticsearch
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
       - http.cors.enabled=true
@@ -120,6 +119,26 @@ services:
       - 5672:5672
       - 15672:15672
     networks:
+      - backend
+
+  consumer:
+    depends_on:
+      - db
+      - rabbitmq
+    restart: on-failure
+    container_name: consumer
+    build: 
+      context: ./
+      dockerfile: build/Dockerfile-consumer
+    ports:
+      - "9001:9000"
+    environment: 
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_ERLANG_COOKIE: rabbitmq_cookie
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_PORT: 5672
+    networks: 
       - backend
 
 volumes:
