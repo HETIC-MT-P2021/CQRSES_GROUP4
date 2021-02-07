@@ -6,46 +6,94 @@ import (
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cqrs"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/commands"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/queries"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/elasticsearch"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 )
 
+// GetArticles from read-model index on elastic search
+func GetArticles(c *gin.Context) {
+	c.JSON(http.StatusCreated, gin.H{
+		"route": "GET /articles",
+	})
+}
+
 // GetArticle from read-model index on elastic search
 func GetArticle(c *gin.Context) {
-	query := cqrs.NewQueryImpl(&queries.ReadArticlesQuery{})
+	aggregateArticleID := c.Param("aggregate_article_id")
+
+	query := cqrs.NewQueryImpl(&queries.ReadArticleQuery{
+		AggregateArticleID: aggregateArticleID,
+	})
 	article, err := domain.QueryBus.Dispatch(query)
 	if err != nil {
 		log.Println(err)
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":  404,
-			"message": "Article not fount",
+			"message": "Article not found",
 		})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{
-		"articles": article,
-	})
+	c.JSON(http.StatusCreated, article)
 }
 
-// CreateArticle from pkg/state/
+// CreateArticle will generate a command CreateArticleCommand
 func CreateArticle(c *gin.Context) {
-	id := uuid.NewV4()
-	article := database.Article{
-		ID:          id.String(),
-		Title:       "hello",
-		Description: "NIce",
-	}
-	err := elasticsearch.StoreReadmodel(article)
-	if err != nil {
-		log.Println(err)
+	var req database.Article
+
+	if err := c.BindJSON(&req); err != nil {
+		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{
-		"aggregate_id": id.String(),
+	aggregateArticleID := uuid.NewV4()
+	command := cqrs.NewCommandImpl(&commands.CreateArticleCommand{
+		ID:          aggregateArticleID.String(),
+		Title:       req.Title,
+		Description: req.Description,
 	})
+
+	err := domain.CommandBus.Dispatch(command)
+	if err == nil {
+		c.JSON(http.StatusCreated, gin.H{
+			"status": "created",
+		})
+	} else {
+		c.JSON(http.StatusServiceUnavailable, gin.H{
+			"status": 0,
+			"error":  err,
+		})
+	}
+}
+
+// UpdateArticle will generate a command UpdateArticleCommand
+func UpdateArticle(c *gin.Context) {
+	aggregateArticleID := c.Param("aggregate_article_id")
+
+	var req database.Article
+	if err := c.BindJSON(&req); err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	command := cqrs.NewCommandImpl(&commands.UpdateArticleCommand{
+		ID:          aggregateArticleID,
+		Title:       req.Title,
+		Description: req.Description,
+	})
+
+	err := domain.CommandBus.Dispatch(command)
+	if err == nil {
+		c.JSON(http.StatusCreated, gin.H{
+			"status": "updated",
+		})
+	} else {
+		c.JSON(http.StatusServiceUnavailable, gin.H{
+			"status": 0,
+			"error":  err.Error(),
+		})
+	}
 }
