@@ -52,6 +52,8 @@ func main() {
 		log.Panic(err)
 	}
 
+	log.Print("RABBITMQ CONNECTED", Messager.Messaging.Connection.IsClosed())
+
 	domain.InitBusses()
 	state.InitState()
 

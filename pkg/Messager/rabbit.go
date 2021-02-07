@@ -3,7 +3,6 @@ package Messager
 import (
 	"github.com/streadway/amqp"
 	"log"
-	"os"
 	"time"
 )
 
@@ -15,38 +14,35 @@ type Broker struct {
 var Messaging *Broker
 
 const (
-	attemptsRabbitConnexion = 3
-	waitForConnexion        = 3
+	attemptsRabbitConnexion = 10
+	waitForConnexion        = 5
 )
 
 func InitBroker() (error error) {
 
-	url := os.Getenv("AMQP_URL")
+	// url := os.Getenv("AMQP_URL")
 
 	for index := 1; index <= attemptsRabbitConnexion; index++ {
-		connection, err := amqp.Dial(url)
+		conn, err := amqp.Dial("amqp://guest:guest@rabbitmq:5672/")
 		if err != nil {
-			if index < attemptsRabbitConnexion {
-				log.Printf("Rabbit connection, %d retry : %v", index, err)
-				time.Sleep(waitForConnexion * time.Second)
-			}
+			log.Print(err, "Failed to connect to RabbitMQ")
+			time.Sleep(waitForConnexion * time.Second)
 			continue
 		} else {
-			Messaging.Connection = connection
+			log.Print("conn", conn)
+			log.Print("err", err)
+			Messaging.Connection = conn
 
-			channel, err := connection.Channel()
-
-			if err != nil {
-				log.Print(err)
-				return err
+			ch, err := conn.Channel()
+			if err == nil {
+				log.Print(err, "Failed to connect to RabbitMQ")
 			}
-
-			Messaging.Channel = channel
+			Messaging.Channel = ch
 		}
-
 		break
 	}
-	defer Messaging.Connection.Close()
 
+	defer Messaging.Connection.Close()
+	defer Messaging.Channel.Close()
 	return nil
 }
