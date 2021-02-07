@@ -9,9 +9,9 @@ import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/elasticsearch"
 )
 
-type ReadArticlesQueryHandler struct{}
+type ReadArticleQueryHandler struct{}
 
-func (qHandler ReadArticlesQueryHandler) Handle(query cqrs.Query) (interface{}, error) {
+func (qHandler ReadArticleQueryHandler) Handle(query cqrs.Query) (interface{}, error) {
 	switch qu := query.Payload().(type) {
 	case *ReadArticleQuery:
 		fmt.Println(qu)
@@ -28,6 +28,6 @@ func (qHandler ReadArticlesQueryHandler) Handle(query cqrs.Query) (interface{}, 
 	}
 }
 
-func NewReadArticlesQueryHandler() *ReadArticlesQueryHandler {
-	return &ReadArticlesQueryHandler{}
+func NewReadArticleQueryHandler() *ReadArticleQueryHandler {
+	return &ReadArticleQueryHandler{}
 }

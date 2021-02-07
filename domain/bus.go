@@ -41,6 +41,6 @@ func initCommandBus() {
 func initQueryBus() {
 	// Initialize query bus and all queries available in application
 	QueryBus = cqrs.NewQueryBus()
-	_ = QueryBus.AddHandler(queries.NewReadArticlesQueryHandler(), &queries.ReadArticleQuery{})
+	_ = QueryBus.AddHandler(queries.NewReadArticleQueryHandler(), &queries.ReadArticleQuery{})
 
 }
