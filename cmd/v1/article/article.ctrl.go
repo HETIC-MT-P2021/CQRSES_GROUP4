@@ -62,7 +62,7 @@ func CreateArticle(c *gin.Context) {
 			"status": "created",
 		})
 	} else {
-		c.JSON(http.StatusCreated, gin.H{
+		c.JSON(http.StatusServiceUnavailable, gin.H{
 			"status": 0,
 			"error":  err,
 		})
@@ -91,7 +91,7 @@ func UpdateArticle(c *gin.Context) {
 			"status": "updated",
 		})
 	} else {
-		c.JSON(http.StatusCreated, gin.H{
+		c.JSON(http.StatusServiceUnavailable, gin.H{
 			"status": 0,
 			"error":  err.Error(),
 		})
