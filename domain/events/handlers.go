@@ -16,6 +16,7 @@ func (eHandler ArticleCreatedEventHandler) Handle(ev event.Event) error {
 	switch ev := ev.Payload().(type) {
 	case *ArticleCreatedEvent:
 		log.Println(ev)
+		fmt.Println("article created !!!")
 		return nil
 	default:
 		return errors.New("bad event")

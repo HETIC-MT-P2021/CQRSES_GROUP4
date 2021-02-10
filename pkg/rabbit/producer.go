@@ -1,12 +1,11 @@
-package messager
+package rabbit
 
 import (
 	"github.com/streadway/amqp"
 )
 
 //Publish new event on rabbitmq
-func (connector rabbitConnector) Publish() error {
-	body := "1"
+func (connector *RabbitRepository) Publish(event string) error {
 	err := connector.Chan.Publish(
 		"",
 		connector.Queue.Name, // routing key
@@ -14,7 +13,7 @@ func (connector rabbitConnector) Publish() error {
 		false,
 		amqp.Publishing{
 			ContentType: "text/plain",
-			Body:        []byte(body),
+			Body:        []byte(event),
 		})
 
 	return err

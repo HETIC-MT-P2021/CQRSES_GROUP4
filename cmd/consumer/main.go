@@ -3,15 +3,17 @@ package main
 import (
 	"log"
 
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/messager"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/rabbit"
 )
 
 func main() {
-	connector, err := messager.ConnectToRabbitMQ()
+	domain.InitBusses()
+
+	err := rabbit.ConnectToRabbitMQ()
 	if err != nil {
 		log.Println(err)
 		return
 	}
-
-	connector.Consume()
+	rabbit.Rabbit.Consume(domain.EventBus)
 }

@@ -1,4 +1,4 @@
-package messager
+package rabbit
 
 import (
 	"fmt"
@@ -7,6 +7,18 @@ import (
 	env "github.com/caarlos0/env"
 	"github.com/streadway/amqp"
 )
+
+type Repository interface {
+	Publish(string) error
+	Consume()
+}
+
+type RabbitRepository struct {
+	Chan  *amqp.Channel
+	Queue amqp.Queue
+}
+
+var Rabbit *RabbitRepository
 
 //rabbitMqEnv contains rabbitmq env credentials
 type rabbitMqEnv struct {
@@ -22,10 +34,10 @@ const (
 )
 
 //ConnectToRabbitMQ is for connecting to rabbitmq
-func ConnectToRabbitMQ() (*rabbitConnector, error) {
+func ConnectToRabbitMQ() error {
 	cfg := rabbitMqEnv{}
 	if err := env.Parse(&cfg); err != nil {
-		return &rabbitConnector{}, fmt.Errorf("failed to parse env: %v", err)
+		return err
 	}
 
 	urlConn := fmt.Sprintf("amqp://%s:%s@%s:%s/",
@@ -47,7 +59,7 @@ func ConnectToRabbitMQ() (*rabbitConnector, error) {
 
 	ch, err := rabbitConnection.Channel()
 	if err != nil {
-		return &rabbitConnector{}, fmt.Errorf("failed to open a channel: %v", err)
+		return err
 	}
 
 	q, err := ch.QueueDeclare(
@@ -59,8 +71,13 @@ func ConnectToRabbitMQ() (*rabbitConnector, error) {
 		nil,
 	)
 	if err != nil {
-		return &rabbitConnector{}, fmt.Errorf("failed to declare a queue: %v", err)
+		return err
 	}
 
-	return newRabbitConnector(ch, q), nil
+	Rabbit = &RabbitRepository{
+		Chan:  ch,
+		Queue: q,
+	}
+
+	return nil
 }

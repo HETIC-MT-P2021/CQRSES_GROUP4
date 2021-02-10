@@ -1,15 +1,21 @@
 package events
 
+// ConsumeMessage sds
+type ConsumeMessage struct {
+	EventType string      `json:"event_type"`
+	Payload   interface{} `json:"payload"`
+}
+
 // ArticleCreatedEvent Event to create an article
 type ArticleCreatedEvent struct {
-	ID          string
-	Title       string
-	Description string
+	ID          string `json:"event_id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
 }
 
 // ArticleUpdatedEvent Event to update an article
 type ArticleUpdatedEvent struct {
-	ID          string
-	Title       string
-	Description string
+	ID          string `json:"event_id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
 }

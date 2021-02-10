@@ -5,7 +5,9 @@ import (
 	"fmt"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cqrs"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/messager"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/events"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/rabbit"
 )
 
 // CreateArticleCommandHandler allows to create an article
@@ -15,14 +17,16 @@ type CreateArticleCommandHandler struct{}
 func (cHandler CreateArticleCommandHandler) Handle(command cqrs.Command) error {
 	switch cmd := command.Payload().(type) {
 	case *CreateArticleCommand:
-		fmt.Println(cmd)
-		// Call QueueConnector
-		connector, err := messager.ConnectToRabbitMQ()
-		if err != nil {
-			return err
+		message := events.ConsumeMessage{
+			EventType: pkg.TypeOf(&events.ArticleCreatedEvent{}),
+			Payload: events.ArticleCreatedEvent{
+				ID:          cmd.ID,
+				Title:       cmd.Title,
+				Description: cmd.Description,
+			},
 		}
 
-		return connector.Publish()
+		return rabbit.QueueConnector(message)
 	default:
 		return errors.New("bad command type")
 	}
