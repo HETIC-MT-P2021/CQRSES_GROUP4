@@ -1,19 +1,9 @@
 package rabbit
 
 import (
-	"encoding/json"
-
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/deserialize"
 )
-
-func deserializeToMAP(serialized string) (map[string]interface{}, error) {
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(serialized), &data); err != nil {
-		return map[string]interface{}{}, err
-	}
-
-	return data, nil
-}
 
 //EventProcessorParams Stores Body (events.ConsumeMessage type) and EventBus
 type EventProcessorParams struct {
@@ -23,7 +13,7 @@ type EventProcessorParams struct {
 
 //EventProcessor Receives serialized event and dispatch it to event handler
 func EventProcessor(eProcessor *EventProcessorParams) error {
-	bodyMapped, err := deserializeToMAP(string(eProcessor.Body))
+	bodyMapped, err := deserialize.ToMAP(string(eProcessor.Body))
 	if err != nil {
 		return err
 	}

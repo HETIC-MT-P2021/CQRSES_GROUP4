@@ -10,7 +10,6 @@ import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/queries"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
 	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
 )
 
 // GetArticles from read-model index on elastic search
@@ -49,9 +48,7 @@ func CreateArticle(c *gin.Context) {
 		return
 	}
 
-	aggregateArticleID := uuid.NewV4()
 	command := cqrs.NewCommandImpl(&commands.CreateArticleCommand{
-		ID:          aggregateArticleID.String(),
 		Title:       req.Title,
 		Description: req.Description,
 	})

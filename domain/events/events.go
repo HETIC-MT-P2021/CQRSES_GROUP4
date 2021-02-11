@@ -1,6 +1,6 @@
 package events
 
-// ConsumeMessage sds
+//ConsumeMessage Send message to rabbitMQ
 type ConsumeMessage struct {
 	EventType string      `json:"event_type"`
 	Payload   interface{} `json:"payload"`
@@ -9,14 +9,14 @@ type ConsumeMessage struct {
 var ArticleCreatedEventType = "ArticleCreatedEvent"
 var ArticleUpdatedEventType = "ArticleUpdatedEvent"
 
-// ArticleCreatedEvent Event to create an article
+//ArticleCreatedEvent Event to create an article
 type ArticleCreatedEvent struct {
 	ID          string `json:"event_id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
 }
 
-// ArticleUpdatedEvent Event to update an article
+//ArticleUpdatedEvent Event to update an article
 type ArticleUpdatedEvent struct {
 	ID          string `json:"event_id"`
 	Title       string `json:"title"`

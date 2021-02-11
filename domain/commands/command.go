@@ -2,7 +2,6 @@ package commands
 
 // CreateArticleCommand Command to create an article
 type CreateArticleCommand struct {
-	ID          string
 	Title       string
 	Description string
 }

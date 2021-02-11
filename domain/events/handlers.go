@@ -3,7 +3,6 @@ package events
 import (
 	"errors"
 	"fmt"
-	"log"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
 )
@@ -13,11 +12,10 @@ type ArticleCreatedEventHandler struct{}
 
 // Handle Creates a new article
 func (eHandler ArticleCreatedEventHandler) Handle(ev event.Event) error {
-	switch ev := ev.Type(); ev {
+	switch evType := ev.Type(); evType {
 	case ArticleCreatedEventType:
-		log.Println(ev)
-		fmt.Println("article created !!!")
-		return nil
+		event := ArticleCreatedEvent{}
+		return event.Process(ev)
 	default:
 		return errors.New("bad event")
 	}
