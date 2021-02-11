@@ -2,12 +2,10 @@ package events
 
 import (
 	"encoding/json"
-	"strconv"
-	"time"
+	"log"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/elasticsearch"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/article"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/deserialize"
 	uuid "github.com/satori/go.uuid"
 )
@@ -21,18 +19,6 @@ func getPayloadMapped(ev event.Event) (map[string]interface{}, error) {
 
 	payload := string(buffer)
 	return deserialize.ToMAP(payload)
-}
-
-func storeEventToElastic(article database.Article) error {
-	createdAt := strconv.FormatInt(time.Now().Unix(), 10)
-	newEvent := database.Event{
-		ID:        uuid.NewV4().String(),
-		EventType: ArticleCreatedEventType,
-		CreatedAt: createdAt,
-		Payload:   article,
-	}
-
-	return elasticsearch.StoreEvent(newEvent)
 }
 
 //Action To make to event
@@ -50,21 +36,18 @@ func (event ArticleCreatedEvent) Process(ev event.Event) error {
 		return err
 	}
 
-	article := database.Article{
-		ID:          uuid.NewV4().String(),
-		Title:       payloadMapped["title"].(string),
-		Description: payloadMapped["description"].(string),
+	create := article.Create{
+		EventType: ArticleUpdatedEventType,
 	}
 
-	if err = storeEventToElastic(article); err != nil {
-		return err
-	}
+	// GetOne returns nil error, so useless to init var
+	newArticle, _ := create.GetOne()
 
-	if err = elasticsearch.StoreReadmodel(article); err != nil {
-		return err
-	}
+	newArticle.ID = uuid.NewV4().String()
+	newArticle.Title = payloadMapped["title"].(string)
+	newArticle.Description = payloadMapped["description"].(string)
 
-	return nil
+	return create.Store(newArticle)
 }
 
 //Process To update an aggregate in read-model
@@ -77,20 +60,20 @@ func (event ArticleUpdatedEvent) Process(ev event.Event) error {
 		return err
 	}
 
-	article := database.Article{
-		ID:          payloadMapped["aggregate_article_id"].(string),
-		Title:       payloadMapped["title"].(string),
-		Description: payloadMapped["description"].(string),
+	aggregateArticleID := payloadMapped["aggregate_article_id"].(string)
+	update := article.Update{
+		AggregateArticleID: aggregateArticleID,
+		EventType:          ArticleUpdatedEventType,
 	}
 
-	if err = storeEventToElastic(article); err != nil {
-		return err
-	}
-
-	err = elasticsearch.UpdateReadmodel(payloadMapped["aggregate_article_id"].(string), article)
+	articleFromElastic, err := update.GetOne()
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 
-	return nil
+	articleFromElastic.Title = payloadMapped["title"].(string)
+	articleFromElastic.Description = payloadMapped["description"].(string)
+
+	return update.Store(articleFromElastic)
 }
