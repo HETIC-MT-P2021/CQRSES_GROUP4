@@ -2,7 +2,6 @@ package events
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
 )
@@ -31,10 +30,10 @@ type ArticleUpdatedEventHandler struct{}
 
 // Handle Updates a new article
 func (eHandler ArticleUpdatedEventHandler) Handle(ev event.Event) error {
-	switch ev := ev.Type(); ev {
+	switch evType := ev.Type(); evType {
 	case ArticleUpdatedEventType:
-		fmt.Println(ev)
-		return nil
+		event := ArticleUpdatedEvent{}
+		return event.Process(ev)
 	default:
 		return errors.New("bad event")
 	}

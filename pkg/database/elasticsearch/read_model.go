@@ -7,7 +7,7 @@ import (
 	db "github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
 )
 
-// StoreReadmodel stores an readmodel for an aggregate article
+// StoreReadmodel stores a readmodel for an aggregate article
 func (r *ElasticRepository) StoreReadmodel(article database.Article) error {
 	ctx := context.Background()
 
@@ -17,6 +17,20 @@ func (r *ElasticRepository) StoreReadmodel(article database.Article) error {
 		Id(article.ID).
 		BodyJson(article).
 		Refresh("wait_for").
+		Do(ctx)
+	return err
+}
+
+// UpdateReadmodel stores an updated readmodel for an aggregate article
+func (r *ElasticRepository) UpdateReadmodel(aggregateArticleID string,
+	article database.Article) error {
+	ctx := context.Background()
+
+	_, err := r.client.Update().
+		Index(indexReadModel).
+		Type("article").
+		Id(aggregateArticleID).
+		Doc(article).
 		Do(ctx)
 	return err
 }

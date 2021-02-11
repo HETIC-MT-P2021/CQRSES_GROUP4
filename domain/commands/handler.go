@@ -2,7 +2,6 @@ package commands
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cqrs"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/events"
@@ -46,13 +45,19 @@ type UpdateArticleCommandHandler struct{}
 func (cHandler UpdateArticleCommandHandler) Handle(command cqrs.Command) error {
 	switch cmd := command.Payload().(type) {
 	case *UpdateArticleCommand:
-		fmt.Println(cmd)
-		// Call QueueConnector
+		message := events.ConsumeMessage{
+			EventType: pkg.TypeOf(&events.ArticleUpdatedEvent{}),
+			Payload: events.ArticleUpdatedEvent{
+				ID:          cmd.ID,
+				Title:       cmd.Title,
+				Description: cmd.Description,
+			},
+		}
+
+		return rabbit.QueueConnector(message)
 	default:
 		return errors.New("bad command type")
 	}
-
-	return nil
 }
 
 // NewUpdateArticleCommandHandler Creates an instance

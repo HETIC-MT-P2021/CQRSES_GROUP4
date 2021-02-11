@@ -50,6 +50,26 @@ func (event ArticleCreatedEvent) Process(ev event.Event) error {
 	return nil
 }
 
-func (event ArticleUpdatedEvent) Process() {
+//Process To update an aggregate in read-model
+//Get aggregate from elastic-search
+//update article state
+//Update to elastic-search
+func (event ArticleUpdatedEvent) Process(ev event.Event) error {
+	payloadMapped, err := getPayloadMapped(ev)
+	if err != nil {
+		return err
+	}
 
+	article := database.Article{
+		ID:          payloadMapped["aggregate_article_id"].(string),
+		Title:       payloadMapped["title"].(string),
+		Description: payloadMapped["description"].(string),
+	}
+
+	err = elasticsearch.UpdateReadmodel(payloadMapped["aggregate_article_id"].(string), article)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

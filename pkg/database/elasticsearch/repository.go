@@ -17,6 +17,7 @@ type Repository interface {
 	LoadEvents() ([]db.Event, error)
 
 	StoreReadmodel(db.Article) error
+	UpdateReadmodel(string, db.Article) error
 	GetReadmodel(string) (db.Article, error)
 }
 
@@ -60,6 +61,11 @@ func LoadEvents() ([]db.Event, error) {
 // StoreReadmodel in database
 func StoreReadmodel(article db.Article) error {
 	return impl.StoreReadmodel(article)
+}
+
+// UpdateReadmodel in database
+func UpdateReadmodel(aggregateArticleID string, article db.Article) error {
+	return impl.UpdateReadmodel(aggregateArticleID, article)
 }
 
 // GetReadmodel from database
