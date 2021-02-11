@@ -6,6 +6,9 @@ type ConsumeMessage struct {
 	Payload   interface{} `json:"payload"`
 }
 
+var ArticleCreatedEventType = "ArticleCreatedEvent"
+var ArticleUpdatedEventType = "ArticleUpdatedEvent"
+
 // ArticleCreatedEvent Event to create an article
 type ArticleCreatedEvent struct {
 	ID          string `json:"event_id"`

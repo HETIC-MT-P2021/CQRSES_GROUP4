@@ -27,8 +27,8 @@ func InitBusses() {
 func initEventBus() {
 	// Initialize event bus and all events available in application
 	EventBus = event.NewEventBus()
-	_ = EventBus.AddHandler(events.NewArticleCreatedEventHandler(), &events.ArticleCreatedEvent{})
-	_ = EventBus.AddHandler(events.NewArticleUpdatedEventHandler(), &events.ArticleUpdatedEvent{})
+	_ = EventBus.AddHandler(events.NewArticleCreatedEventHandler(), events.ArticleCreatedEventType)
+	_ = EventBus.AddHandler(events.NewArticleUpdatedEventHandler(), events.ArticleUpdatedEventType)
 }
 
 func initCommandBus() {

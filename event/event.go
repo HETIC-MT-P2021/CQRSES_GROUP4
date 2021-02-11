@@ -2,8 +2,6 @@ package event
 
 import (
 	"fmt"
-
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg"
 )
 
 // EventBus Contains handlers
@@ -27,13 +25,12 @@ func NewEventBus() *EventBus {
 }
 
 // AddHandler to bus
-func (eventBus EventBus) AddHandler(handler EventHandler, event interface{}) error {
-	typeName := pkg.TypeOf(event)
-	if _, ok := eventBus.handlers[typeName]; ok {
+func (eventBus EventBus) AddHandler(handler EventHandler, eventType string) error {
+	if _, ok := eventBus.handlers[eventType]; ok {
 		return fmt.Errorf("Event handler already exists")
 	}
 
-	eventBus.handlers[typeName] = handler
+	eventBus.handlers[eventType] = handler
 	return nil
 }
 
@@ -47,19 +44,21 @@ func (eventBus EventBus) Dispatch(event Event) error {
 
 // EventImpl Overrides Event
 type EventImpl struct {
-	Content interface{}
+	EventType string
+	Content   interface{}
 }
 
 // NewEventImpl Initialize an Event implementation
-func NewEventImpl(eventContent interface{}) *EventImpl {
+func NewEventImpl(eventType string, eventContent interface{}) *EventImpl {
 	return &EventImpl{
-		Content: eventContent,
+		EventType: eventType,
+		Content:   eventContent,
 	}
 }
 
 // Type Returns event type
 func (event EventImpl) Type() string {
-	return pkg.TypeOf(event.Content)
+	return event.EventType
 }
 
 // Payload Returns event content

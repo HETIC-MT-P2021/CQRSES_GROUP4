@@ -13,8 +13,8 @@ type ArticleCreatedEventHandler struct{}
 
 // Handle Creates a new article
 func (eHandler ArticleCreatedEventHandler) Handle(ev event.Event) error {
-	switch ev := ev.Payload().(type) {
-	case *ArticleCreatedEvent:
+	switch ev := ev.Type(); ev {
+	case ArticleCreatedEventType:
 		log.Println(ev)
 		fmt.Println("article created !!!")
 		return nil
@@ -33,8 +33,8 @@ type ArticleUpdatedEventHandler struct{}
 
 // Handle Updates a new article
 func (eHandler ArticleUpdatedEventHandler) Handle(ev event.Event) error {
-	switch ev := ev.Payload().(type) {
-	case *ArticleUpdatedEvent:
+	switch ev := ev.Type(); ev {
+	case ArticleUpdatedEventType:
 		fmt.Println(ev)
 		return nil
 	default:
