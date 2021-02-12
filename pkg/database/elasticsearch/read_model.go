@@ -2,6 +2,7 @@ package elasticsearch
 
 import (
 	"context"
+	"errors"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
 	db "github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
@@ -41,7 +42,7 @@ func (r *ElasticRepository) GetReadmodel(aggregateID string) (db.Article, error)
 	config := &configElastic{
 		ctx:             context.Background(),
 		client:          r.client,
-		searchKey:       "aggregate_article_id",
+		searchKey:       "_id",
 		searchThisValue: aggregateID,
 	}
 
@@ -54,6 +55,11 @@ func (r *ElasticRepository) GetReadmodel(aggregateID string) (db.Article, error)
 	article, err := searchArticleImpl.unmarshal(searchResult)
 	if err != nil {
 		return db.Article{}, err
+	}
+
+	articleIsEmpty := len(article.content.([]db.Article)) <= 0
+	if articleIsEmpty {
+		return db.Article{}, errors.New(ArticleNotFoundError)
 	}
 
 	return article.content.([]db.Article)[0], nil

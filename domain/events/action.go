@@ -2,10 +2,12 @@ package events
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
+	"strings"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/article"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/elasticsearch"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/deserialize"
 	uuid "github.com/satori/go.uuid"
 )
@@ -68,8 +70,19 @@ func (event ArticleUpdatedEvent) Process(ev event.Event) error {
 
 	articleFromElastic, err := update.GetOne()
 	if err != nil {
-		log.Println(err)
-		return err
+		articleFound := !strings.Contains(err.Error(), elasticsearch.ArticleNotFoundError)
+		if articleFound {
+			return err
+		}
+
+		evsFromElastic, err := elasticsearch.LoadEvents()
+		if err != nil {
+			return err
+		}
+
+		for _, evElastic := range evsFromElastic {
+			fmt.Printf("elastic event : %s\n", evElastic)
+		}
 	}
 
 	articleFromElastic.Title = payloadMapped["title"].(string)

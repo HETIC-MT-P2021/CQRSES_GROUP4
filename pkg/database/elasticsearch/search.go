@@ -85,9 +85,11 @@ func newSearchArticleImpl(config *configElastic) *searchArticleImpl {
 func (searchArticleImpl *searchArticleImpl) doSearch() (*elastic.SearchResult, error) {
 	elasticConfig := searchArticleImpl.configElastic
 
+	query := elastic.NewTermQuery(elasticConfig.searchKey, elasticConfig.searchThisValue)
 	searchResult, err := elasticConfig.client.Search().
 		Index(indexReadModel).
-		Query(elastic.NewMatchQuery(elasticConfig.searchKey, elasticConfig.searchThisValue)).
+		Query(query).
+		Pretty(true).
 		Do(elasticConfig.ctx)
 
 	if err != nil {
