@@ -13,6 +13,7 @@ type EventBus struct {
 type Event interface {
 	Type() string
 	Payload() interface{}
+	ShouldBeStored() bool
 }
 
 // NewEventBus Initialize empty handlers in bus
@@ -46,22 +47,29 @@ func (eventBus EventBus) Dispatch(event Event) error {
 type EventImpl struct {
 	EventType string
 	Content   interface{}
+	StoreInDB bool
 }
 
 // NewEventImpl Initialize an Event implementation
-func NewEventImpl(eventType string, eventContent interface{}) *EventImpl {
+func NewEventImpl(eventType string, eventContent interface{}, storeInDB bool) *EventImpl {
 	return &EventImpl{
 		EventType: eventType,
 		Content:   eventContent,
+		StoreInDB: storeInDB,
 	}
 }
 
-// Type Returns event type
+//Type Returns event type
 func (event EventImpl) Type() string {
 	return event.EventType
 }
 
-// Payload Returns event content
+//Payload Returns event content
 func (event EventImpl) Payload() interface{} {
 	return event.Content
+}
+
+//ShouldBeStored Returns bool to be abble to know if should be stored on DB
+func (event EventImpl) ShouldBeStored() bool {
+	return event.StoreInDB
 }

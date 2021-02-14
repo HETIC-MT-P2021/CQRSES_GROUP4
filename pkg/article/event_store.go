@@ -9,7 +9,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func storeEventToElastic(eventType string, article database.Article) error {
+func StoreEventToElastic(eventType string, article database.Article) error {
 	createdAt := strconv.FormatInt(time.Now().Unix(), 10)
 	newEvent := database.Event{
 		ID:        uuid.NewV4().String(),

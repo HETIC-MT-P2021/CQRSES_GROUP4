@@ -3,11 +3,9 @@ package events
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/article"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/elasticsearch"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/deserialize"
 	uuid "github.com/satori/go.uuid"
 )
@@ -33,6 +31,7 @@ type Action interface {
 //2. Add event to elastic-search
 //3. Add read-model to elastic-search
 func (event ArticleCreatedEvent) Process(ev event.Event) error {
+	fmt.Println("Action creation")
 	payloadMapped, err := getPayloadMapped(ev)
 	if err != nil {
 		return err
@@ -42,10 +41,19 @@ func (event ArticleCreatedEvent) Process(ev event.Event) error {
 		EventType: ArticleUpdatedEventType,
 	}
 
+	if ev.ShouldBeStored() {
+		articlePayload := create.PayloadToArticle(payloadMapped)
+		create.StoreEventToElastic(articlePayload)
+	}
+
 	// GetOne returns nil error, so useless to init var
 	newArticle, _ := create.GetOne()
 
-	newArticle.ID = uuid.NewV4().String()
+	aggregateArticleID := payloadMapped["aggregate_article_id"].(string)
+	if aggregateArticleID == "" {
+		aggregateArticleID = uuid.NewV4().String()
+	}
+	newArticle.ID = aggregateArticleID
 	newArticle.Title = payloadMapped["title"].(string)
 	newArticle.Description = payloadMapped["description"].(string)
 
@@ -57,6 +65,7 @@ func (event ArticleCreatedEvent) Process(ev event.Event) error {
 //2. update article state
 //3. Update to elastic-search
 func (event ArticleUpdatedEvent) Process(ev event.Event) error {
+	fmt.Println("Action update")
 	payloadMapped, err := getPayloadMapped(ev)
 	if err != nil {
 		return err
@@ -68,21 +77,14 @@ func (event ArticleUpdatedEvent) Process(ev event.Event) error {
 		EventType:          ArticleUpdatedEventType,
 	}
 
+	if ev.ShouldBeStored() {
+		articlePayload := update.PayloadToArticle(payloadMapped)
+		update.StoreEventToElastic(articlePayload)
+	}
+
 	articleFromElastic, err := update.GetOne()
 	if err != nil {
-		articleFound := !strings.Contains(err.Error(), elasticsearch.ArticleNotFoundError)
-		if articleFound {
-			return err
-		}
-
-		evsFromElastic, err := elasticsearch.LoadEvents()
-		if err != nil {
-			return err
-		}
-
-		for _, evElastic := range evsFromElastic {
-			fmt.Printf("elastic event : %s\n", evElastic)
-		}
+		return err
 	}
 
 	articleFromElastic.Title = payloadMapped["title"].(string)
