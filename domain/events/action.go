@@ -2,7 +2,6 @@ package events
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/article"
@@ -31,7 +30,6 @@ type Action interface {
 //2. Add event to elastic-search
 //3. Add read-model to elastic-search
 func (event ArticleCreatedEvent) Process(ev event.Event) error {
-	fmt.Println("Action creation")
 	payloadMapped, err := getPayloadMapped(ev)
 	if err != nil {
 		return err
@@ -65,7 +63,6 @@ func (event ArticleCreatedEvent) Process(ev event.Event) error {
 //2. update article state
 //3. Update to elastic-search
 func (event ArticleUpdatedEvent) Process(ev event.Event) error {
-	fmt.Println("Action update")
 	payloadMapped, err := getPayloadMapped(ev)
 	if err != nil {
 		return err

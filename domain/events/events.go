@@ -1,11 +1,5 @@
 package events
 
-//ConsumeMessage Send message to rabbitMQ
-type ConsumeMessage struct {
-	EventType string      `json:"event_type"`
-	Payload   interface{} `json:"payload"`
-}
-
 //ArticleCreatedEventType is an event
 var ArticleCreatedEventType = "ArticleCreatedEvent"
 

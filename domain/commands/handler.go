@@ -18,7 +18,7 @@ func (cHandler CreateArticleCommandHandler) Handle(command cqrs.Command) error {
 	switch cmd := command.Payload().(type) {
 	case *CreateArticleCommand:
 		aggregateEventID := uuid.NewV4()
-		message := events.ConsumeMessage{
+		message := rabbit.ConsumeMessage{
 			EventType: pkg.TypeOf(&events.ArticleCreatedEvent{}),
 			Payload: events.ArticleCreatedEvent{
 				ID:          aggregateEventID.String(),
@@ -45,7 +45,7 @@ type UpdateArticleCommandHandler struct{}
 func (cHandler UpdateArticleCommandHandler) Handle(command cqrs.Command) error {
 	switch cmd := command.Payload().(type) {
 	case *UpdateArticleCommand:
-		message := events.ConsumeMessage{
+		message := rabbit.ConsumeMessage{
 			EventType: pkg.TypeOf(&events.ArticleUpdatedEvent{}),
 			Payload: events.ArticleUpdatedEvent{
 				ID:          cmd.ID,

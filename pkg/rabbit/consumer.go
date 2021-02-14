@@ -1,8 +1,6 @@
 package rabbit
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"strings"
 
@@ -42,15 +40,13 @@ func (connector *RabbitRepository) Consume(eventBus *event.EventBus) {
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
-			eventType, eventPayload, err := getTypeAndPayload(string(d.Body))
 
-			err = EventProcessor(&EventProcessorParams{
-				EventType:    eventType,
-				EventPayload: eventPayload,
-				EventBus:     eventBus,
-				StoreInDB:    true,
-			})
-
+			eProcessor := &EventProcessor{
+				Message:   d.Body,
+				EventBus:  eventBus,
+				StoreInDB: true,
+			}
+			consumeMSG, err := eProcessor.ApplyEventProcessor()
 			if err != nil {
 				articleFound := !strings.Contains(err.Error(), elasticsearch.ArticleNotFoundError)
 				if articleFound {
@@ -58,47 +54,15 @@ func (connector *RabbitRepository) Consume(eventBus *event.EventBus) {
 					return
 				}
 
-				marshall, err := json.Marshal(eventPayload)
+				article, err := consumeMSG.GetPayload()
 				if err != nil {
 					log.Println(err)
 					return
 				}
 
-				aggr, err := deserialize.ToMAP(string(marshall))
-				if err != nil {
+				aggregateArticleID := article["aggregate_article_id"].(string)
+				if err = eProcessor.ApplyEvents(aggregateArticleID); err != nil {
 					log.Println(err)
-					return
-				}
-
-				evsFromElastic, err := elasticsearch.LoadEvents(aggr["aggregate_article_id"].(string))
-				if err != nil {
-					log.Println(err)
-					return
-				}
-
-				for _, evElastic := range evsFromElastic {
-					body, err := json.Marshal(evElastic)
-					if err != nil {
-						log.Println(err)
-						return
-					}
-
-					eventType, eventPayload, err = getTypeAndPayload(string(body))
-
-					err = EventProcessor(&EventProcessorParams{
-						EventType:    eventType,
-						EventPayload: eventPayload,
-						EventBus:     eventBus,
-						StoreInDB:    false,
-					})
-
-					fmt.Printf("elastic event : %s\n", evElastic)
-
-					if err != nil {
-						log.Println(err)
-						//return
-					}
-
 				}
 			}
 		}
