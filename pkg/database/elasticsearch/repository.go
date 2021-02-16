@@ -14,9 +14,10 @@ type Repository interface {
 	createIndexIfNotExists(string) error
 
 	StoreEvent(event db.Event) error
-	LoadEvents() ([]db.Event, error)
+	LoadEvents(string) ([]db.Event, error)
 
 	StoreReadmodel(db.Article) error
+	UpdateReadmodel(string, db.Article) error
 	GetReadmodel(string) (db.Article, error)
 }
 
@@ -53,13 +54,18 @@ func StoreEvent(event db.Event) error {
 }
 
 // LoadEvents from database
-func LoadEvents() ([]db.Event, error) {
-	return impl.LoadEvents()
+func LoadEvents(aggregateArticleID string) ([]db.Event, error) {
+	return impl.LoadEvents(aggregateArticleID)
 }
 
 // StoreReadmodel in database
 func StoreReadmodel(article db.Article) error {
 	return impl.StoreReadmodel(article)
+}
+
+// UpdateReadmodel in database
+func UpdateReadmodel(aggregateArticleID string, article db.Article) error {
+	return impl.UpdateReadmodel(aggregateArticleID, article)
 }
 
 // GetReadmodel from database

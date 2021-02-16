@@ -8,8 +8,8 @@ import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
 )
 
-// EventBus Allow to stores all event on database
-var eventBus *event.EventBus
+// eventBus Allow to stores all event on database
+var EventBus *event.EventBus
 
 // CommandBus Allows to manage write model
 var CommandBus *cqrs.CommandBus
@@ -26,9 +26,9 @@ func InitBusses() {
 
 func initEventBus() {
 	// Initialize event bus and all events available in application
-	eventBus = event.NewEventBus()
-	_ = eventBus.AddHandler(events.NewArticleCreatedEventHandler(), &events.ArticleCreatedEvent{})
-	_ = eventBus.AddHandler(events.NewArticleUpdatedEventHandler(), &events.ArticleUpdatedEvent{})
+	EventBus = event.NewEventBus()
+	_ = EventBus.AddHandler(events.NewArticleCreatedEventHandler(), events.ArticleCreatedEventType)
+	_ = EventBus.AddHandler(events.NewArticleUpdatedEventHandler(), events.ArticleUpdatedEventType)
 }
 
 func initCommandBus() {

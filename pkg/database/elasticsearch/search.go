@@ -40,9 +40,11 @@ func newSearchEventImpl(config *configElastic) *searchEventImpl {
 func (searchEventImpl *searchEventImpl) doSearch() (*elastic.SearchResult, error) {
 	elasticConfig := searchEventImpl.configElastic
 
+	query := elastic.NewMatchQuery(elasticConfig.searchKey, elasticConfig.searchThisValue)
 	searchResult, err := elasticConfig.client.Search().
 		Index(indexEventStore).
-		Query(elastic.NewMatchAllQuery()).
+		Query(query).
+		Pretty(true).
 		Do(elasticConfig.ctx)
 
 	if err != nil {
@@ -54,6 +56,7 @@ func (searchEventImpl *searchEventImpl) doSearch() (*elastic.SearchResult, error
 
 func (searchEventImpl searchEventImpl) unmarshal(fromData *elastic.SearchResult) (unmarshal, error) {
 	var events []db.Event
+
 	for _, hit := range fromData.Hits.Hits {
 		var event db.Event
 
@@ -85,9 +88,11 @@ func newSearchArticleImpl(config *configElastic) *searchArticleImpl {
 func (searchArticleImpl *searchArticleImpl) doSearch() (*elastic.SearchResult, error) {
 	elasticConfig := searchArticleImpl.configElastic
 
+	query := elastic.NewTermQuery(elasticConfig.searchKey, elasticConfig.searchThisValue)
 	searchResult, err := elasticConfig.client.Search().
 		Index(indexReadModel).
-		Query(elastic.NewMatchQuery(elasticConfig.searchKey, elasticConfig.searchThisValue)).
+		Query(query).
+		Pretty(true).
 		Do(elasticConfig.ctx)
 
 	if err != nil {

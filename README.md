@@ -8,7 +8,10 @@ This app allows you to build in a easy and fast way a go project using the combi
    https://github.com/HETIC-MT-P2021/CQRSES_GROUP4/issues
    
 Don't forget to read/use commits and PR conventions before doing any change !
-   
+  
+## Docs
+You can find our docs folder [here](https://github.com/HETIC-MT-P2021/CQRSES_GROUP4/docs)
+
 ## Health check ❤️
 
 **Request:**
@@ -80,7 +83,86 @@ Authorization: 	Bearer <string>
 ```http request
 HTTP/1.1 403 Forbidden 
 HTTP/1.1 500 Internal server error
-``` 
+```
+
+## Article :newspaper:
+
+### Get an article
+**Request:**
+```http request
+GET /api/v1/articles/<aggregate_article_id>
+Accept: application/json
+Content-Type: application/json
+{
+  "title": "<title>",
+  "description": "<description>"
+}
+```
+
+**Successful Response:**
+```http request
+HTTP/1.1 201
+{
+  "id":  "<id>",
+  "title": "<title>"
+  "description": "<description>"
+}
+```
+
+**Failed Response:**
+```http request
+HTTP/1.1 404 Not Found
+```
+
+### New article
+**Request:**
+```http request
+POST /api/v1/articles
+Accept: application/json
+Content-Type: application/json
+{
+  "title": "<title>",
+  "description": "<description>"
+}
+```
+
+**Successful Response:**
+```http request
+HTTP/1.1 201
+{
+  "status": "created"
+}
+```
+
+**Failed Response:**
+```http request
+HTTP/1.1 500 Internal Server Error
+```
+
+### Update an article
+**Request:**
+```http request
+PUT /api/v1/articles/<aggregate_article_id>
+Accept: application/json
+Content-Type: application/json
+{
+  "title": "<title>",
+  "description": "<description>"
+}
+```
+
+**Successful Response:**
+```http request
+HTTP/1.1 201
+{
+  "status": "updated"
+}
+```
+
+**Failed Response:**
+```http request
+HTTP/1.1 500 Internal Server Error
+```
 
 ## Features 📘 (incoming)
 

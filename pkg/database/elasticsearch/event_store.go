@@ -21,10 +21,12 @@ func (r *ElasticRepository) StoreEvent(event db.Event) error {
 }
 
 // LoadEvents returns all events from elastic
-func (r *ElasticRepository) LoadEvents() ([]db.Event, error) {
+func (r *ElasticRepository) LoadEvents(aggregateArticleID string) ([]db.Event, error) {
 	config := &configElastic{
-		ctx:    context.Background(),
-		client: r.client,
+		ctx:             context.Background(),
+		client:          r.client,
+		searchKey:       "payload.aggregate_article_id",
+		searchThisValue: aggregateArticleID,
 	}
 
 	searchEventImpl := newSearchEventImpl(config)
