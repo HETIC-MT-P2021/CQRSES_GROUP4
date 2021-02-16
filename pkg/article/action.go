@@ -12,7 +12,8 @@ type ActionRequested interface {
 
 //Create new Article
 type Create struct {
-	EventType string
+	EventType   string
+	AggregateID string
 }
 
 //Update new Article

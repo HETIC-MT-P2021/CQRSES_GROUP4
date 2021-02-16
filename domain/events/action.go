@@ -35,25 +35,24 @@ func (event ArticleCreatedEvent) Process(ev event.Event) error {
 		return err
 	}
 
-	create := article.Create{
-		EventType: ArticleUpdatedEventType,
-	}
+	aggregateArticleID := uuid.NewV4().String()
 
-	if ev.ShouldBeStored() {
-		articlePayload := create.PayloadToArticle(payloadMapped)
-		create.StoreEventToElastic(articlePayload)
+	create := article.Create{
+		EventType:   ArticleUpdatedEventType,
+		AggregateID: aggregateArticleID,
 	}
 
 	// GetOne returns nil error, so useless to init var
 	newArticle, _ := create.GetOne()
 
-	aggregateArticleID := payloadMapped["aggregate_article_id"].(string)
-	if aggregateArticleID == "" {
-		aggregateArticleID = uuid.NewV4().String()
-	}
 	newArticle.ID = aggregateArticleID
 	newArticle.Title = payloadMapped["title"].(string)
 	newArticle.Description = payloadMapped["description"].(string)
+
+	if ev.ShouldBeStored() {
+		articlePayload := create.PayloadToArticle(payloadMapped)
+		create.StoreEventToElastic(articlePayload)
+	}
 
 	return create.Store(newArticle)
 }

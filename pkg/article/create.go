@@ -13,7 +13,7 @@ import (
 //@see ActionRequested interface
 func (create Create) PayloadToArticle(payload map[string]interface{}) database.Article {
 	return database.Article{
-		ID:          payload["aggregate_article_id"].(string),
+		ID:          create.AggregateID,
 		Title:       payload["title"].(string),
 		Description: payload["description"].(string),
 	}
