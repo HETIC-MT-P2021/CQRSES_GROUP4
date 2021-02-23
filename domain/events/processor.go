@@ -23,10 +23,14 @@ func (event ArticleCreatedEvent) payloadToArticle(payload map[string]interface{}
 	}
 }
 
-//getOne article to elastic
+//update article state
 //@see Action interface
-func (event ArticleCreatedEvent) getOne() (database.Article, error) {
-	return database.Article{}, nil
+func (event ArticleCreatedEvent) update(articlePayload map[string]interface{}) (database.Article, error) {
+	return database.Article{
+		ID:          articlePayload["aggregate_article_id"].(string),
+		Title:       articlePayload["title"].(string),
+		Description: articlePayload["description"].(string),
+	}, nil
 }
 
 //storeReadModel An article in db
@@ -63,13 +67,16 @@ func (event ArticleUpdatedEvent) payloadToArticle(payload map[string]interface{}
 	}
 }
 
-//getOne article to elastic
+//update article state
 //@see Action interface
-func (event ArticleUpdatedEvent) getOne() (database.Article, error) {
+func (event ArticleUpdatedEvent) update(articlePayload map[string]interface{}) (database.Article, error) {
 	article, err := elasticsearch.GetReadmodel(event.AggregateArticleID)
 	if err != nil {
 		return database.Article{}, err
 	}
+
+	article.Title = articlePayload["title"].(string)
+	article.Description = articlePayload["description"].(string)
 
 	return article, nil
 }

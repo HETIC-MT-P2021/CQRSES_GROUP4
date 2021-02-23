@@ -14,12 +14,8 @@ func (event ArticleCreatedEvent) Apply(ev event.Event) error {
 		return err
 	}
 
-	// GetOne returns nil error, so useless to init var
-	newArticle, _ := event.getOne()
-
-	newArticle.ID = payloadMapped["aggregate_article_id"].(string)
-	newArticle.Title = payloadMapped["title"].(string)
-	newArticle.Description = payloadMapped["description"].(string)
+	// update returns nil error, so useless to init var
+	newArticle, _ := event.update(payloadMapped)
 
 	if ev.ShouldBeStored() {
 		articlePayload := event.payloadToArticle(payloadMapped)
@@ -41,12 +37,10 @@ func (event ArticleUpdatedEvent) Apply(ev event.Event) error {
 
 	event.AggregateArticleID = payloadMapped["aggregate_article_id"].(string)
 
-	articleFromElastic, err := event.getOne()
+	articleFromElastic, err := event.update(payloadMapped)
 	if err != nil {
 		return err
 	}
-	articleFromElastic.Title = payloadMapped["title"].(string)
-	articleFromElastic.Description = payloadMapped["description"].(string)
 
 	if ev.ShouldBeStored() {
 		articlePayload := event.payloadToArticle(payloadMapped)

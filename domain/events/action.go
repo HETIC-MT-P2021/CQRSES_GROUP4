@@ -24,7 +24,7 @@ type Event interface {
 	Apply()
 
 	payloadToArticle(map[string]interface{}) database.Article
-	getOne() (database.Article, error)
+	getOne(map[string]interface{}) (database.Article, error)
 	storeReadModel(database.Article) error
 	storeEventToElastic(database.Article) error
 }
