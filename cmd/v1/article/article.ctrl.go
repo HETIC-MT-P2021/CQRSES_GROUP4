@@ -77,9 +77,9 @@ func UpdateArticle(c *gin.Context) {
 	}
 
 	command := cqrs.NewCommandImpl(&commands.UpdateArticleCommand{
-		ID:          aggregateArticleID,
-		Title:       req.Title,
-		Description: req.Description,
+		AggregateArticleID: aggregateArticleID,
+		Title:              req.Title,
+		Description:        req.Description,
 	})
 
 	err := domain.CommandBus.Dispatch(command)

@@ -8,14 +8,14 @@ var ArticleUpdatedEventType = "ArticleUpdatedEvent"
 
 //ArticleCreatedEvent Event to create an article
 type ArticleCreatedEvent struct {
-	ID          string `json:"event_id"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
+	Title              string `json:"title"`
+	Description        string `json:"description"`
+	AggregateArticleID string `json:"aggregate_article_id"`
 }
 
 //ArticleUpdatedEvent Event to update an article
 type ArticleUpdatedEvent struct {
-	ID          string `json:"aggregate_article_id"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
+	Title              string `json:"title"`
+	Description        string `json:"description"`
+	AggregateArticleID string `json:"aggregate_article_id"`
 }
