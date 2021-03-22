@@ -18,6 +18,7 @@ You can find our docs folder [here](https://github.com/HETIC-MT-P2021/CQRSES_GRO
 ```http request
 GET /api/v1/health_check
 ```
+
 **Successful Response:**
 ```http request
 HTTP/1.1 200 OK
@@ -172,6 +173,7 @@ HTTP/1.1 500 Internal Server Error
 ## Libraries 📚 (incoming)
 
 [Go-Swagger](https://github.com/go-swagger/go-swagger)
+
 [Gin Gonic](https://github.com/gin-gonic/gin)
 
 ## Contributors ✨
