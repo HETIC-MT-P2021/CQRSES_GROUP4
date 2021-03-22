@@ -46,6 +46,7 @@ func main() {
 		log.Panic(err)
 	}
 
+	//database.MakeMigrations()
 	domain.InitBusses()
 
 	err := elasticsearch.MakeConnection()
