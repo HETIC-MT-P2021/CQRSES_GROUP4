@@ -8,7 +8,7 @@ type CreateArticleCommand struct {
 
 // UpdateArticleCommand Command to create an article
 type UpdateArticleCommand struct {
-	ID          string
-	Title       string
-	Description string
+	AggregateArticleID string
+	Title              string
+	Description        string
 }

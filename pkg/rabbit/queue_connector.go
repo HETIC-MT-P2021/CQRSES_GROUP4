@@ -2,6 +2,7 @@ package rabbit
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 //QueueConnector Serialize event and send to rabbitMQ queue
@@ -10,6 +11,9 @@ func QueueConnector(event interface{}) error {
 	if err != nil {
 		return nil
 	}
+
+	fmt.Println("event data2")
+	fmt.Println(string(buffer))
 
 	err = ConnectToRabbitMQ()
 	if err != nil {

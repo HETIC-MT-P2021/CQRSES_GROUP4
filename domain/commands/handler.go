@@ -5,9 +5,7 @@ import (
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cqrs"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/events"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/rabbit"
-	uuid "github.com/satori/go.uuid"
 )
 
 // CreateArticleCommandHandler allows to create an article
@@ -17,11 +15,9 @@ type CreateArticleCommandHandler struct{}
 func (cHandler CreateArticleCommandHandler) Handle(command cqrs.Command) error {
 	switch cmd := command.Payload().(type) {
 	case *CreateArticleCommand:
-		aggregateEventID := uuid.NewV4()
 		message := rabbit.ConsumeMessage{
-			EventType: pkg.TypeOf(&events.ArticleCreatedEvent{}),
+			EventType: events.ArticleCreatedEventType,
 			Payload: events.ArticleCreatedEvent{
-				ID:          aggregateEventID.String(),
 				Title:       cmd.Title,
 				Description: cmd.Description,
 			},
@@ -46,11 +42,11 @@ func (cHandler UpdateArticleCommandHandler) Handle(command cqrs.Command) error {
 	switch cmd := command.Payload().(type) {
 	case *UpdateArticleCommand:
 		message := rabbit.ConsumeMessage{
-			EventType: pkg.TypeOf(&events.ArticleUpdatedEvent{}),
+			EventType: events.ArticleUpdatedEventType,
 			Payload: events.ArticleUpdatedEvent{
-				ID:          cmd.ID,
-				Title:       cmd.Title,
-				Description: cmd.Description,
+				AggregateArticleID: cmd.AggregateArticleID,
+				Title:              cmd.Title,
+				Description:        cmd.Description,
 			},
 		}
 
