@@ -27,7 +27,17 @@ HTTP/1.1 200 OK
 }
 ```
 
-## Auth 🔒
+## Auth :lock:
+
+There is 3 roles implemented. 
+
+- Operator 
+- Admin 
+- Super admin
+
+You can add a new account with the register routes.
+
+You add have an JWT key for auth, with the login Routes. The token will be available in the response Header.
 
 ### Login
 **Request:**
