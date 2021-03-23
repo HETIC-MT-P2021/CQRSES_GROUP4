@@ -41,4 +41,4 @@ jobs:
     - name: swagger
       run: |
         go get -u github.com/swaggo/swag/cmd/swag
-        swag init
+        swag init -g cmd/app/main.go
