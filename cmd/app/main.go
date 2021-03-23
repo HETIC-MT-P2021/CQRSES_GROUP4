@@ -10,20 +10,20 @@ import (
 	"time"
 
 	v1 "github.com/HETIC-MT-P2021/CQRSES_GROUP4/cmd/v1"
+	_ "github.com/HETIC-MT-P2021/CQRSES_GROUP4/docs"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/elasticsearch"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
-// @title Survey documentation API
+// @title CQRS Event sourcing  documentation API
 // @version 1.0
-// @description This is an api for creating a app
+// @description This is the api documentation for the CQRS Event sourcing implementation for HETIC
 
-// @contact.name Agostin Jean-baptiste
-// @contact.email Jbagostin@gmail.com
+// @contact.name HETIC-MT5
 
 // @license.name MIT
 
@@ -46,7 +46,6 @@ func main() {
 		log.Panic(err)
 	}
 
-	//database.MakeMigrations()
 	domain.InitBusses()
 
 	err := elasticsearch.MakeConnection()
