@@ -1,11 +1,10 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is an api for creating a survey",
-        "title": "Survey documentation API",
+        "description": "This is the api documentation for the CQRS Event sourcing implementation for HETIC",
+        "title": "CQRS Event sourcing  documentation API",
         "contact": {
-            "name": "Agostin Jean-baptiste",
-            "email": "Jbagostin@gmail.com"
+            "name": "HETIC-MT5"
         },
         "license": {
             "name": "MIT"

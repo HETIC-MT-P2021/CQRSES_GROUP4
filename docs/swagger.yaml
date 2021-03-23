@@ -2,12 +2,12 @@ basePath: /api/v1
 host: localhost:8080
 info:
   contact:
-    email: Jbagostin@gmail.com
-    name: Agostin Jean-baptiste
-  description: This is an api for creating a app
+    name: HETIC-MT5
+  description: This is the api documentation for the CQRS Event sourcing implementation
+    for HETIC
   license:
     name: MIT
-  title: Survey documentation API
+  title: CQRS Event sourcing  documentation API
   version: "1.0"
 paths: {}
 securityDefinitions:
