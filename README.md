@@ -6,10 +6,10 @@ This app allows you to build in a easy and fast way a go project using the combi
 
 * To submit bug reports and feature suggestions, or track changes:
    https://github.com/HETIC-MT-P2021/CQRSES_GROUP4/issues
-   
+
 Don't forget to read/use commits and PR conventions before doing any change !
-  
-## Docs
+
+## Docs 📄
 You can find our docs folder [here](https://github.com/HETIC-MT-P2021/CQRSES_GROUP4/tree/master/docs)
 
 ## Health check ❤️
