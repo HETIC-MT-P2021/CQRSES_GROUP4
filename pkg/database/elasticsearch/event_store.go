@@ -17,6 +17,7 @@ func (r *ElasticRepository) StoreEvent(event db.Event) error {
 		BodyJson(event).
 		Refresh("wait_for").
 		Do(ctx)
+
 	return err
 }
 

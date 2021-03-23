@@ -40,7 +40,7 @@ func (eventBus EventBus) Dispatch(event Event) error {
 	if handler, ok := eventBus.handlers[event.Type()]; ok {
 		return handler.Handle(event)
 	}
-	return fmt.Errorf("Handler doesn't exist")
+	return fmt.Errorf("the event bus does not have a handler for events of type: %s", event.Type())
 }
 
 // EventImpl Overrides Event

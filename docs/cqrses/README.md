@@ -11,7 +11,7 @@ Follow this guide step by step to create your own command and event.
 ## Command
 Create new route in `ApplyRoutes()` /cmd/v1/article/article.go
 ```go
-r.GET("/articles/:aggregate_article_id/title", jwt_auth.Operator(jwtAuth), UpdateArticleTitle)
+r.PUT("/articles/:aggregate_article_id/title", jwt_auth.Operator(jwtAuth), UpdateArticleTitle)
 ```
 
 Create associated method for this route in /cmd/v1/article/article.ctrl.go
@@ -50,6 +50,8 @@ Create command in /domain/commands/command.go
 // UpdateArticleTitleCommand Command to update title of an article
 type UpdateArticleTitleCommand struct {
 	Title string
+	AggregateArticleID string
+
 }
 ```
 
@@ -64,8 +66,9 @@ func (cHandler UpdateArticleTitleCommandHandler) Handle(command cqrs.Command) er
 	switch cmd := command.Payload().(type) {
 	case *UpdateArticleTitleCommand:
 		message := rabbit.ConsumeMessage{
-			EventType: events.UpdateArticleTitleEventType,
-			Payload: events.UpdateArticleTitleEvent{
+			EventType: events.ArticleUpdatedTitleEventType,
+			Payload: events.ArticleUpdatedTitleEvent{
+				AggregateArticleID: cmd.AggregateArticleID,
 				Title:       cmd.Title,
 			},
 		}
@@ -89,15 +92,22 @@ Add mapping between command and handler in `initCommandBus()` /domain/bus.go
 _ = CommandBus.AddHandler(commands.NewUpdateArticleTitleCommandHandler(), &commands.UpdateArticleTitleCommand{})
 ```
 
+Add mapping between event and handler in `initEventBus()` /domain/bus.go
+
+```go
+_ = EventBus.AddHandler(events.NewArticleUpdatedTitleEventHandler(), events.ArticleUpdatedTitleEventType)
+```
+
 ## Event
 Add mapping between command and handler in `initCommandBus()` /domain/bus.go
 
 Create event in /domain/events/events.go
+
 ```go
 //ArticleUpdatedTitleEventType is an event
 var ArticleUpdatedTitleEventType = "ArticleUpdatedTitleEvent"
 
-// ArticleUpdatedTitleEvent Event to update title of an article
+//ArticleUpdatedTitleEvent Event to update title of an article
 type ArticleUpdatedTitleEvent struct {
 	Title string `json:"title"`
 	AggregateArticleID string `json:"aggregate_article_id"`
@@ -148,29 +158,19 @@ func (event ArticleUpdatedTitleEvent) Apply(ev event.Event) error {
 	}
 
 	if ev.ShouldBeStored() {
-		articlePayload := event.payloadToArticle(payloadMapped)
-		event.storeEventToElastic(articlePayload)
+		event.storeEventToElastic(articleFromElastic)
 	}
 
 	return event.storeReadModel(articleFromElastic)
 }
 ```
 
-Create all methods needed by `Apply()` in /domain/events/apply.go
+Create all methods needed by `Apply()` in /domain/events/processor.go
 
 ```go
 //------------------------------------------------------------------
 // ArticleUpdatedTitleEvent
 //------------------------------------------------------------------
-
-//payloadToArticle Transform payload to article struct
-//@see Action interface
-func (event ArticleUpdatedTitleEvent) payloadToArticle(payload map[string]interface{}) database.Article {
-	return database.Article{
-		ID:          payload["aggregate_article_id"].(string),
-		Title:       payload["title"].(string),
-	}
-}
 
 //update article state
 //@see Action interface
@@ -188,6 +188,12 @@ func (event ArticleUpdatedTitleEvent) update(articlePayload map[string]interface
 //storeReadModel An article in db
 //@see Action interface
 func (event ArticleUpdatedTitleEvent) storeReadModel(article database.Article) error {
+	return elasticsearch.StoreReadmodel(article)
+}
+
+//storeEventToElastic in db
+//@see Action interface
+func (event ArticleUpdatedTitleEvent) storeEventToElastic(article database.Article) error {
 	createdAt := strconv.FormatInt(time.Now().Unix(), 10)
 	newEvent := database.Event{
 		ID:        uuid.NewV4().String(),
@@ -199,11 +205,4 @@ func (event ArticleUpdatedTitleEvent) storeReadModel(article database.Article) e
 	return elasticsearch.StoreEvent(newEvent)
 }
 
-//storeEventToElastic in db
-//@see Action interface
-func (event ArticleUpdatedTitleEvent) storeEventToElastic(article database.Article) error {
-	return elasticsearch.StoreReadmodel(article)
-}
 ```
-
-

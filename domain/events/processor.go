@@ -13,16 +13,6 @@ import (
 // ArticleCreatedEvent
 //------------------------------------------------------------------
 
-//payloadToArticle Transform payload to article struct
-//@see Action interface
-func (event ArticleCreatedEvent) payloadToArticle(payload map[string]interface{}) database.Article {
-	return database.Article{
-		ID:          uuid.NewV4().String(),
-		Title:       payload["title"].(string),
-		Description: payload["description"].(string),
-	}
-}
-
 //update article state
 //@see Action interface
 func (event ArticleCreatedEvent) update(articlePayload map[string]interface{}) (database.Article, error) {
@@ -36,6 +26,12 @@ func (event ArticleCreatedEvent) update(articlePayload map[string]interface{}) (
 //storeReadModel An article in db
 //@see Action interface
 func (event ArticleCreatedEvent) storeReadModel(article database.Article) error {
+	return elasticsearch.StoreReadmodel(article)
+}
+
+//storeEventToElastic in db
+//@see Action interface
+func (event ArticleCreatedEvent) storeEventToElastic(article database.Article) error {
 	createdAt := strconv.FormatInt(time.Now().Unix(), 10)
 	newEvent := database.Event{
 		ID:        uuid.NewV4().String(),
@@ -47,25 +43,9 @@ func (event ArticleCreatedEvent) storeReadModel(article database.Article) error 
 	return elasticsearch.StoreEvent(newEvent)
 }
 
-//storeEventToElastic in db
-//@see Action interface
-func (event ArticleCreatedEvent) storeEventToElastic(article database.Article) error {
-	return elasticsearch.StoreReadmodel(article)
-}
-
 //------------------------------------------------------------------
 // ArticleUpdatedEvent
 //------------------------------------------------------------------
-
-//payloadToArticle Transform payload to article struct
-//@see Action interface
-func (event ArticleUpdatedEvent) payloadToArticle(payload map[string]interface{}) database.Article {
-	return database.Article{
-		ID:          payload["aggregate_article_id"].(string),
-		Title:       payload["title"].(string),
-		Description: payload["description"].(string),
-	}
-}
 
 //update article state
 //@see Action interface
@@ -84,6 +64,12 @@ func (event ArticleUpdatedEvent) update(articlePayload map[string]interface{}) (
 //storeReadModel An article in db
 //@see Action interface
 func (event ArticleUpdatedEvent) storeReadModel(article database.Article) error {
+	return elasticsearch.StoreReadmodel(article)
+}
+
+//storeEventToElastic in db
+//@see Action interface
+func (event ArticleUpdatedEvent) storeEventToElastic(article database.Article) error {
 	createdAt := strconv.FormatInt(time.Now().Unix(), 10)
 	newEvent := database.Event{
 		ID:        uuid.NewV4().String(),
@@ -93,10 +79,4 @@ func (event ArticleUpdatedEvent) storeReadModel(article database.Article) error 
 	}
 
 	return elasticsearch.StoreEvent(newEvent)
-}
-
-//storeEventToElastic in db
-//@see Action interface
-func (event ArticleUpdatedEvent) storeEventToElastic(article database.Article) error {
-	return elasticsearch.StoreReadmodel(article)
 }

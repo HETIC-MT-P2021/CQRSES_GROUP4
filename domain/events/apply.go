@@ -14,12 +14,13 @@ func (event ArticleCreatedEvent) Apply(ev event.Event) error {
 		return err
 	}
 
+	payloadMapped["aggregate_article_id"] = event.AggregateArticleID
+
 	// update returns nil error, so useless to init var
 	newArticle, _ := event.update(payloadMapped)
 
 	if ev.ShouldBeStored() {
-		articlePayload := event.payloadToArticle(payloadMapped)
-		event.storeEventToElastic(articlePayload)
+		event.storeEventToElastic(newArticle)
 	}
 
 	return event.storeReadModel(newArticle)
@@ -43,8 +44,7 @@ func (event ArticleUpdatedEvent) Apply(ev event.Event) error {
 	}
 
 	if ev.ShouldBeStored() {
-		articlePayload := event.payloadToArticle(payloadMapped)
-		event.storeEventToElastic(articlePayload)
+		event.storeEventToElastic(articleFromElastic)
 	}
 
 	return event.storeReadModel(articleFromElastic)
