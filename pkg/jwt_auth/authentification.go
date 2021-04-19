@@ -1,14 +1,14 @@
 package jwt_auth
 
 import (
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/user"
 	"github.com/gin-gonic/gin"
 	jwt "github.com/kyfk/gin-jwt"
 	"golang.org/x/crypto/bcrypt"
 )
 
-type User = database.User
-type Role = database.Role
+type User = user.User
+type Role = user.Role
 
 // NewAuth Create new auth context
 func NewAuth() (jwt.Auth, error) {
@@ -24,7 +24,7 @@ func NewAuth() (jwt.Auth, error) {
 				return nil, jwt.ErrorAuthenticationFailed
 			}
 
-			u, err := database.GetUserFromUsername(req.Username)
+			u, err := user.UserImpl.GetUserFromUsername(req.Username)
 
 			if err != nil {
 				return nil, jwt.ErrorUserNotFound
@@ -44,7 +44,7 @@ func NewAuth() (jwt.Auth, error) {
 			if !ok {
 				return nil, nil
 			}
-			u, err := database.GetUserFromUsername(username)
+			u, err := user.UserImpl.GetUserFromUsername(username)
 			if err != nil {
 				return nil, nil
 			}

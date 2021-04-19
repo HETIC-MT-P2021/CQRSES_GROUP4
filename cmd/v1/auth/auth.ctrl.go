@@ -3,7 +3,7 @@ package auth
 import (
 	"net/http"
 
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/user"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,14 +15,14 @@ type requestRegister struct {
 
 // Register routes for creating account
 func Register(c *gin.Context) {
-	var req database.RequestRegister
+	var req user.RequestRegister
 
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
 
-	err := database.CreateAccount(req)
+	err := user.UserImpl.CreateAccount(req)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)

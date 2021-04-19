@@ -2,7 +2,7 @@ version: "3.8"
 services:
   # Db mysql
   db:
-    image: mariadb:10.5.8
+    image: mysql:8
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     ports:
@@ -82,28 +82,28 @@ services:
       - 9300:9300
 
   # kibana
-  kibana:
-    image: docker.elastic.co/kibana/kibana:7.8.0
-    container_name: kibana
-    environment:
-      SERVER_NAME: localhost
-      ELASTICSEARCH_URL: http://elasticsearch1:9200/
-    ports:
-      - 5601:5601
-    volumes:
-      - type: volume
-        source: logs
-        target: /var/log
-    ulimits:
-      nproc: 65535
-      memlock:
-        soft: -1
-        hard: -1
-    cap_add:
-      - ALL
-    networks:
-      - elastic
-      - ingress
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:7.8.0
+  #   container_name: kibana
+  #   environment:
+  #     SERVER_NAME: localhost
+  #     ELASTICSEARCH_URL: http://elasticsearch1:9200/
+  #   ports:
+  #     - 5601:5601
+  #   volumes:
+  #     - type: volume
+  #       source: logs
+  #       target: /var/log
+  #   ulimits:
+  #     nproc: 65535
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   cap_add:
+  #     - ALL
+  #   networks:
+  #     - elastic
+  #     - ingress
 
   rabbitmq:
     hostname: rabbitmq

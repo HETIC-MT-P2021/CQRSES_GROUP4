@@ -3,6 +3,7 @@ module github.com/HETIC-MT-P2021/CQRSES_GROUP4
 go 1.13
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.0 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/gin-gonic/gin v1.6.3

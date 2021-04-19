@@ -1,45 +1,12 @@
-package database
+package user
 
 import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/query"
 	"golang.org/x/crypto/bcrypt"
 )
 
-type Role uint8
-
-type RequestRegister struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
-}
-
-const (
-	OPERATOR     Role = 0x1
-	ADMIN        Role = 0x1 << 1
-	SYSTEM_ADMIN Role = 0x1 << 2
-)
-
-func (r Role) IsOperator() bool {
-	return r&OPERATOR != 0
-}
-
-func (r Role) IsAdmin() bool {
-	return r&ADMIN != 0
-}
-
-func (r Role) IsSystemAdmin() bool {
-	return r&SYSTEM_ADMIN != 0
-}
-
-type User struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"-"` // here is just for example
-	Role     Role   `json:"role"`
-}
-
 // GetUserFromUsername method for retrieve user from bdd
-func GetUserFromUsername(username string) (user *User, err error) {
+func (r *UserRepositoryImpl) GetUserFromUsername(username string) (*User, error) {
 	var (
 		Email    string
 		Password string
@@ -47,7 +14,7 @@ func GetUserFromUsername(username string) (user *User, err error) {
 	)
 
 	sqlStmt := query.QUERY_FIND_USERS_BY_USERNAME
-	stmt, err := DbConn.Prepare(sqlStmt)
+	stmt, err := r.DbConn.Prepare(sqlStmt)
 	defer stmt.Close()
 
 	err = stmt.QueryRow(username).Scan(&Email, &Password, &RoleInt)
@@ -55,7 +22,7 @@ func GetUserFromUsername(username string) (user *User, err error) {
 		return nil, err
 	}
 
-	user = &User{
+	user := &User{
 		Username: username,
 		Email:    Email,
 		Password: Password,
@@ -66,11 +33,11 @@ func GetUserFromUsername(username string) (user *User, err error) {
 }
 
 // CreateAccount method for create an account with role operator
-func CreateAccount(userInput RequestRegister) (err error) {
+func (r *UserRepositoryImpl) CreateAccount(userInput RequestRegister) (err error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(userInput.Password), bcrypt.DefaultCost)
 	sqlStmt := query.QUERY_CREATE_ACCOUNT
 
-	tx, err := DbConn.Begin()
+	tx, err := r.DbConn.Begin()
 	if err != nil {
 		return err
 	}
