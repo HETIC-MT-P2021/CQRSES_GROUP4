@@ -1,46 +1,109 @@
 package user
 
 import (
+	"regexp"
 	"testing"
+
+	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/query"
+	"github.com/stretchr/testify/assert"
+)
+
+const (
+	DEFAULT_USERNAME = "admin"
+	DEFAULT_PASSWORD = "admin"
+	DEFAULT_EMAIL = "admin@gmail.com"
+	DEFAULT_ROLE = 1
+	
+	STATUS_SUCCESS = "success" 
+	STATUS_ERROR = "error" 
 )
 
 func TestCreateAccount(t *testing.T) {
-	/*userInput := RequestRegister{
-		Username: "admin",
-		Password: "admin",
-		Email: "admin@gmail.com",
+	db, mock := pkg.NewSQLMock()
+	repo := UserRepositoryImpl{
+		DbConn: db,
 	}
 
-	hash, err := bcrypt.GenerateFromPassword([]byte(userInput.Password), bcrypt.DefaultCost)
-	sqlStmt := query.QUERY_CREATE_ACCOUNT
+	defer func() {
+		repo.Close()
+	}()
 
-	db, mock, err := sqlmock.New()
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	userInput := RequestRegister{
+		Username: DEFAULT_USERNAME,
+		Password: DEFAULT_PASSWORD,
+		Email: DEFAULT_EMAIL,
 	}
-	defer db.Close()
 
-	mock.ExpectBegin()
-	mock.ExpectRollback()
-	mock.ExpectExec(sqlStmt).
-		WithArgs(userInput.Email, userInput.Username, hash).
-		WillReturnResult(sqlmock.NewResult(1, 1))
+	var cases = []struct {
+		what        		string // What I want to test
+		userInput        RequestRegister // Input
+		status        	string // status, success | error
+	}{
+		{"Ok", userInput, STATUS_SUCCESS},
+	}
+
+	for _, tt := range cases {
+		mock.ExpectBegin()
+
+		prep := mock.ExpectPrepare(regexp.QuoteMeta(query.QUERY_CREATE_ACCOUNT))
+		prep.ExpectExec().
+			WithArgs(tt.userInput.Email, tt.userInput.Username, tt.userInput.Password).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		mock.ExpectCommit()
+
+		err := repo.CreateAccount(tt.userInput)
+
+		if (tt.status == "success") {
+			assert.NoError(t, err)
+		} else {
+			assert.Error(t, err)
+		}
+	}
+}
+
+func TestGetUserFromUsername(t *testing.T) {
+	db, mock := pkg.NewSQLMock()
+	repo := UserRepositoryImpl{
+		DbConn: db,
+	}
+
+	defer func() {
+		repo.Close()
+	}()
+
+	user := User {
+		Password: DEFAULT_PASSWORD,
+		Email: DEFAULT_EMAIL,
+		Role: DEFAULT_ROLE,
+	}
+
+	var cases = []struct {
+		what        		string // What I want to test
+		username        string // Input
+		status        	string // status, success | error
+	}{
+		{"Ok", "admin", STATUS_SUCCESS},
+		{"User not found", "tt", STATUS_ERROR},
+	}
+
+	for _, tt := range cases {
+		rows := sqlmock.NewRows([]string{"Email", "Password", "Role"}).
+		AddRow(user.Email, user.Password, user.Role)
 	
-	mock.ExpectCommit()*/
-	/*stmt, es := tx.Prepare(sqlStmt)
-	if es != nil {
-		return es
-	}
-	defer stmt.Close()
+		prep := mock.ExpectPrepare(regexp.QuoteMeta(query.QUERY_FIND_USERS_BY_USERNAME))
+		prep.ExpectQuery().
+			WithArgs(DEFAULT_USERNAME).
+			WillReturnRows(rows)
 
-	if _, err := stmt.Exec(userInput.Email, userInput.Username, hash); err != nil {
-		return err
-	}
+		_, err := repo.GetUserFromUsername(tt.username)
 
-	if err := tx.Commit(); err != nil {
-		return err
+		if (tt.status == "success") {
+			assert.NoError(t, err)
+		} else {
+			assert.Error(t, err)
+		}
 	}
-	return nil
-	
-	}*/
 }

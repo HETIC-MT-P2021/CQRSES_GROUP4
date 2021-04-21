@@ -5,6 +5,7 @@ import (
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/user"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type requestRegister struct {
@@ -22,8 +23,15 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	err := user.UserImpl.CreateAccount(req)
+	hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
 
+	req.Password = string(hash)
+	
+	err = user.UserImpl.CreateAccount(req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return

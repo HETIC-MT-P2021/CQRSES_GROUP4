@@ -30,6 +30,11 @@ type UserRepositoryImpl struct {
 
 var UserImpl *UserRepositoryImpl
 
+// Close the DB connection
+func (r *UserRepositoryImpl) Close() {
+	r.DbConn.Close()
+}
+
 // NewUserRepositoryImpl creates new UserImpl
 func NewUserRepositoryImpl(dbConn *sql.DB) {
 	UserImpl = &UserRepositoryImpl{
