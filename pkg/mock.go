@@ -3,6 +3,8 @@ package pkg
 import (
 	"database/sql"
 	"log"
+	"net/http"
+	"net/http/httptest"
 
 	"github.com/DATA-DOG/go-sqlmock"
 )
@@ -14,4 +16,17 @@ func NewSQLMock() (*sql.DB, sqlmock.Sqlmock) {
 	}
 
 	return db, mock
+}
+
+func NewHandlerMock(response string) *httptest.Server{
+	handler := http.NotFound
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		handler(w, r)
+	}))
+
+	handler = func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(response))
+	}
+
+	return server
 }

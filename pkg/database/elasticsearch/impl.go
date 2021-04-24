@@ -12,7 +12,7 @@ import (
 
 // ElasticRepository implements repository interface
 type ElasticRepository struct {
-	client *elastic.Client
+	Client *elastic.Client
 }
 
 // Close closes database
@@ -33,7 +33,7 @@ func MakeConnection() error {
 		if err != nil {
 			time.Sleep(timeToWaitInSeconds * time.Second)
 		} else {
-			setRepository(es)
+			SetRepository(es)
 			break
 		}
 	}
@@ -87,7 +87,7 @@ func (r *ElasticRepository) isClientReady(clientURL string) error {
 
 	var err error
 	for index := 0; index <= numberOftries; index++ {
-		_, _, err := r.client.Ping(clientURL).Do(ctx)
+		_, _, err := r.Client.Ping(clientURL).Do(ctx)
 		if err != nil {
 			time.Sleep(timeToWaitInSeconds * time.Second)
 		} else {
@@ -102,7 +102,7 @@ func (r *ElasticRepository) isClientReady(clientURL string) error {
 func (r *ElasticRepository) createIndexIfNotExists(indexName string) error {
 	ctx := context.Background()
 
-	exists, err := r.client.IndexExists(indexName).Do(ctx)
+	exists, err := r.Client.IndexExists(indexName).Do(ctx)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -110,7 +110,7 @@ func (r *ElasticRepository) createIndexIfNotExists(indexName string) error {
 	if !exists {
 		fmt.Println("key not exists")
 
-		createIndex, err := r.client.CreateIndex(indexName).BodyString(mapping[indexName]).Do(ctx)
+		createIndex, err := r.Client.CreateIndex(indexName).BodyString(mapping[indexName]).Do(ctx)
 		if err != nil {
 			return err
 		}
