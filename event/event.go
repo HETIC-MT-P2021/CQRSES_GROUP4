@@ -43,6 +43,21 @@ func (eventBus EventBus) Dispatch(event Event) error {
 	return fmt.Errorf("the event bus does not have a handler for events of type: %s", event.Type())
 }
 
+// GetLength of registred event
+func (eventBus EventBus) GetLength() int {
+	return len(eventBus.handlers)
+}
+
+// GetEventName of registred event
+func (eventBus EventBus) GetEventsName() []string {
+	eventsName := []string{}
+	for eventName := range eventBus.handlers {
+		eventsName = append(eventsName, eventName)
+	}
+
+	return eventsName
+}
+
 // EventImpl Overrides Event
 type EventImpl struct {
 	EventType string
