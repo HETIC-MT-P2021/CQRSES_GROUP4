@@ -12,9 +12,3 @@ type UpdateArticleCommand struct {
 	Title              string
 	Description        string
 }
-
-// UpdateArticleTitleCommand Command to update title of an article
-type UpdateArticleTitleCommand struct {
-	Title              string
-	AggregateArticleID string
-}
