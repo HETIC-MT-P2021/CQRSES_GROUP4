@@ -2,9 +2,11 @@ package commands
 
 import (
 	"errors"
+	"os"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cqrs"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/events"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/rabbit"
 )
 
@@ -27,7 +29,11 @@ func (cHandler CreateArticleCommandHandler) Handle(command cqrs.Command) error {
 			},
 		}
 
-		return rabbit.QueueConnector(message)
+		if os.Getenv("APP_ENV") != pkg.Test {
+			return rabbit.QueueConnector(message)
+		}
+
+		return nil
 	default:
 		return errors.New("bad command type")
 	}
@@ -58,7 +64,11 @@ func (cHandler UpdateArticleCommandHandler) Handle(command cqrs.Command) error {
 			},
 		}
 
-		return rabbit.QueueConnector(message)
+		if os.Getenv("APP_ENV") != pkg.Test {
+			return rabbit.QueueConnector(message)
+		}
+
+		return nil
 	default:
 		return errors.New("bad command type")
 	}

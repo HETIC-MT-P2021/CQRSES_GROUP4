@@ -21,28 +21,18 @@ func getFakeEventBus() (*event.EventBus, error) {
 	return bus, err
 }
 
-func TestAllEvents(t *testing.T) {
+func TestArticleCreatedEventHandler(t *testing.T) {
 	bus, err := getFakeEventBus()
 	if err != nil {
 		t.Errorf(err.Error())
 	}
 
-	ArticleCreatedEventOKImpl := event.NewEventImpl(ArticleCreatedEventType, &ArticleCreatedEvent{
+	articleCreatedEventOKImpl := event.NewEventImpl(ArticleCreatedEventType, &ArticleCreatedEvent{
 		Title: "title",
 		Description: "description",
 	}, true)
 
-	ArticleUpdatedEventOKImpl := event.NewEventImpl(ArticleUpdatedEventType, &ArticleUpdatedEvent{
-		Title: "title",
-		Description: "description",
-	}, true)
-
-	ArticleCreatedEventBadImpl := event.NewEventImpl("fail", &ArticleCreatedEvent{
-		Title: "title",
-		Description: "description",
-	}, true)
-
-	ArticleUpdatedEventBadImpl := event.NewEventImpl("fail", &ArticleUpdatedEvent{
+	articleCreatedEventBadImpl := event.NewEventImpl("fail", &ArticleCreatedEvent{
 		Title: "title",
 		Description: "description",
 	}, true)
@@ -51,10 +41,42 @@ func TestAllEvents(t *testing.T) {
 		what        							string // What I want to test
 		eventImpl									event.Event // input
 	}{
-		{"Ok", ArticleCreatedEventOKImpl},
-		{"Ok", ArticleUpdatedEventOKImpl},
-		{"ArticleCreatedEventBadImpl Bad", ArticleCreatedEventBadImpl},
-		{"ArticleUpdatedEventBadImpl Bad", ArticleUpdatedEventBadImpl},
+		{"Ok", articleCreatedEventOKImpl},
+		{"ArticleCreatedEventBadImpl Bad", articleCreatedEventBadImpl},
+	}
+
+	for _, testCase := range cases {
+		err := bus.Dispatch(testCase.eventImpl)
+		if testCase.what == "Ok" {
+			assert.NoError(t, err)
+		} else {
+			assert.Error(t, err)
+		}
+	}
+}
+
+func TestArticleUpdatedEventHandler(t *testing.T) {
+	bus, err := getFakeEventBus()
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+
+	articleUpdatedEventOKImpl := event.NewEventImpl(ArticleUpdatedEventType, &ArticleUpdatedEvent{
+		Title: "title",
+		Description: "description",
+	}, true)
+
+	articleUpdatedEventBadImpl := event.NewEventImpl("fail", &ArticleUpdatedEvent{
+		Title: "title",
+		Description: "description",
+	}, true)
+
+	var cases = []struct {
+		what        							string // What I want to test
+		eventImpl									event.Event // input
+	}{
+		{"Ok", articleUpdatedEventOKImpl},
+		{"ArticleUpdatedEventBadImpl Bad", articleUpdatedEventBadImpl},
 	}
 
 	for _, testCase := range cases {

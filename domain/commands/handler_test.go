@@ -4,82 +4,59 @@ import (
 	"testing"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cqrs"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/events"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateArticleCommandHandler(t *testing.T) {
-	article := database.Article{
-		Title: "test",
-		Description: "test",
-	}
-	emptyArticle := database.Article{}
+func getFakeCommandBus() (*cqrs.CommandBus, error) {
+	bus := cqrs.NewCommandBus()
 
-	var cases = []struct {
-		what        							string // What I want to test
-		article 									database.Article // input
-	}{
-		{"Ok", article},
-		{"Empty article", emptyArticle},
-	}
+	err := bus.AddHandler(
+		NewCreateArticleCommandHandler(), 
+		&CreateArticleCommand{})
 
-	for _, testCase := range cases {
-		createArticleCommand := cqrs.NewCommandImpl(&CreateArticleCommand{
-			Title: testCase.article.Title,
-			Description: testCase.article.Description,
-		})
+	err = bus.AddHandler(
+		NewUpdateArticleCommandHandler(),
+		&UpdateArticleCommand{})
 
-		switch cmd := createArticleCommand.Payload().(type) {
-		case *CreateArticleCommand:
-			if cmd.Title == "" || cmd.Description == "" {
-				if testCase.what == "Ok" {
-					t.Errorf("Fields should not be empty, title = %s, description = %s", cmd.Title, cmd.Description)
-				}
-			}
-
-			if events.ArticleCreatedEventType != "ArticleCreatedEvent" {
-				t.Errorf("ArticleCreatedEventType = %s, but wanted ArticleCreatedEvent", events.ArticleCreatedEventType)
-			}
-		default:
-			t.Errorf("Bad command type")
-		}
-	}
+	return bus, err
 }
 
 func TestUpdateArticleCommandHandler(t *testing.T) {
-	article := database.Article{
+	bus, err := getFakeCommandBus()
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+
+	updateArticleCommandOkImpl := cqrs.NewCommandImpl(&UpdateArticleCommand{
 		Title: "test",
 		Description: "test",
-	}
-	emptyArticle := database.Article{}
+	})
+
+	updateArticleCommandEmptyTitleImpl := cqrs.NewCommandImpl(&UpdateArticleCommand{
+		Title: "",
+		Description: "test",
+	})
+
+	updateArticleCommandEmptyDescImpl := cqrs.NewCommandImpl(&UpdateArticleCommand{
+		Title: "test",
+		Description: "",
+	})
 
 	var cases = []struct {
 		what        							string // What I want to test
-		article 									database.Article // input
+		cmdImpl 									cqrs.Command // input
 	}{
-		{"Ok", article},
-		{"Empty article", emptyArticle},
+		{"Ok", updateArticleCommandOkImpl},
+		{"Empty Title", updateArticleCommandEmptyTitleImpl},
+		{"Empty Description", updateArticleCommandEmptyDescImpl},
 	}
 
 	for _, testCase := range cases {
-		updateArticleCommand := cqrs.NewCommandImpl(&UpdateArticleCommand{
-			Title: testCase.article.Title,
-			Description: testCase.article.Description,
-		})
-
-		switch cmd := updateArticleCommand.Payload().(type) {
-		case *UpdateArticleCommand:
-			if cmd.Title == "" || cmd.Description == "" {
-				if testCase.what == "Ok" {
-					t.Errorf("Fields should not be empty, title = %s, description = %s", cmd.Title, cmd.Description)
-				}
-			}
-
-			if events.ArticleUpdatedEventType != "ArticleUpdatedEvent" {
-				t.Errorf("ArticleUpdatedEventType = %s, but wanted ArticleUpdatedEvent", events.ArticleUpdatedEventType)
-			}
-		default:
-			t.Errorf("Bad command type")
+		err := bus.Dispatch(testCase.cmdImpl)
+		if testCase.what == "Ok" {
+			assert.NoError(t, err)
+		} else {
+			assert.Error(t, err)
 		}
 	}
 }
