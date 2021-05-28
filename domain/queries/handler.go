@@ -9,7 +9,9 @@ import (
 )
 
 // ReadArticleQueryHandler allows to get article
-type ReadArticleQueryHandler struct{}
+type ReadArticleQueryHandler struct{
+	Repo elasticsearch.Repository
+}
 
 // Handle Get an article from elasticsearch database
 func (qHandler ReadArticleQueryHandler) Handle(query cqrs.Query) (interface{}, error) {
@@ -21,7 +23,7 @@ func (qHandler ReadArticleQueryHandler) Handle(query cqrs.Query) (interface{}, e
 			return []database.Article{}, errors.New("aggregateArticleID should not be empty")
 		}
 
-		articles, err := elasticsearch.GetReadmodel(aggregateArticleID)
+		articles, err := qHandler.Repo.GetReadmodel(aggregateArticleID)
 		if err != nil {
 			return []database.Article{}, err
 		}
@@ -33,6 +35,8 @@ func (qHandler ReadArticleQueryHandler) Handle(query cqrs.Query) (interface{}, e
 }
 
 // NewReadArticleQueryHandler Creates an instance
-func NewReadArticleQueryHandler() *ReadArticleQueryHandler {
-	return &ReadArticleQueryHandler{}
+func NewReadArticleQueryHandler(repo elasticsearch.Repository) *ReadArticleQueryHandler {
+	return &ReadArticleQueryHandler{
+		Repo: repo,
+	}
 }

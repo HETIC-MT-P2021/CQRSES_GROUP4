@@ -40,13 +40,14 @@ func NewEventStore() error {
 		},
 	}
 
-	if err := elasticsearch.StoreEvent(event1); err != nil {
+	elasticImpl := elasticsearch.NewElasticRepository(elasticsearch.ElasticClient)
+	if err := elasticImpl.StoreEvent(event1); err != nil {
 		return err
 	}
-	if err := elasticsearch.StoreEvent(event2); err != nil {
+	if err := elasticImpl.StoreEvent(event2); err != nil {
 		return err
 	}
-	if err := elasticsearch.StoreEvent(event3); err != nil {
+	if err := elasticImpl.StoreEvent(event3); err != nil {
 		return err
 	}
 
@@ -67,10 +68,11 @@ func NewReadModel() error {
 		Description: "Python is insane",
 	}
 
-	if err := elasticsearch.StoreReadmodel(article1); err != nil {
+	elasticImpl := elasticsearch.NewElasticRepository(elasticsearch.ElasticClient)
+	if err := elasticImpl.StoreReadmodel(article1); err != nil {
 		return err
 	}
-	if err := elasticsearch.StoreReadmodel(article2); err != nil {
+	if err := elasticImpl.StoreReadmodel(article2); err != nil {
 		return err
 	}
 	return nil

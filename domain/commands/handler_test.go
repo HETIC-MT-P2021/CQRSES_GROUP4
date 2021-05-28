@@ -21,6 +21,46 @@ func getFakeCommandBus() (*cqrs.CommandBus, error) {
 	return bus, err
 }
 
+func TestCreateArticleCommandHandler(t *testing.T) {
+	bus, err := getFakeCommandBus()
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+
+	createArticleCommandOkImpl := cqrs.NewCommandImpl(&CreateArticleCommand{
+		Title: "test",
+		Description: "test",
+	})
+
+	createArticleCommandEmptyTitleImpl := cqrs.NewCommandImpl(&CreateArticleCommand{
+		Title: "",
+		Description: "test",
+	})
+
+	createArticleCommandEmptyDescImpl := cqrs.NewCommandImpl(&CreateArticleCommand{
+		Title: "test",
+		Description: "",
+	})
+
+	var cases = []struct {
+		what        							string // What I want to test
+		cmdImpl 									cqrs.Command // input
+	}{
+		{"Ok", createArticleCommandOkImpl},
+		{"Empty Title", createArticleCommandEmptyTitleImpl},
+		{"Empty Description", createArticleCommandEmptyDescImpl},
+	}
+
+	for _, testCase := range cases {
+		err := bus.Dispatch(testCase.cmdImpl)
+		if testCase.what == "Ok" {
+			assert.NoError(t, err)
+		} else {
+			assert.Error(t, err)
+		}
+	}
+}
+
 func TestUpdateArticleCommandHandler(t *testing.T) {
 	bus, err := getFakeCommandBus()
 	if err != nil {

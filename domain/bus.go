@@ -6,6 +6,7 @@ import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/events"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/queries"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/elasticsearch"
 )
 
 // eventBus Allow to stores all event on database
@@ -41,5 +42,7 @@ func initCommandBus() {
 func initQueryBus() {
 	// Initialize query bus and all queries available in application
 	QueryBus = cqrs.NewQueryBus()
-	_ = QueryBus.AddHandler(queries.NewReadArticleQueryHandler(), &queries.ReadArticleQuery{})
+	elasticClient := elasticsearch.NewElasticRepository(elasticsearch.ElasticClient)
+	queryHandler := queries.NewReadArticleQueryHandler(elasticClient)
+	_ = QueryBus.AddHandler(queryHandler, &queries.ReadArticleQuery{})
 }

@@ -17,7 +17,9 @@ func main() {
 		return
 	}
 
-	err = elasticsearch.SetUpIndexes()
+	elasticImpl := elasticsearch.NewElasticRepository(elasticsearch.ElasticClient)
+
+	err = elasticImpl.SetUpIndexes()
 	if err != nil {
 		log.Println(err)
 		return
