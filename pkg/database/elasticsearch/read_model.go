@@ -12,7 +12,7 @@ import (
 func (r *ElasticRepository) StoreReadmodel(article database.Article) error {
 	ctx := context.Background()
 
-	_, err := r.client.Index().
+	_, err := r.Client.Index().
 		Index(indexReadModel).
 		Type("article").
 		Id(article.ID).
@@ -27,7 +27,7 @@ func (r *ElasticRepository) UpdateReadmodel(aggregateArticleID string,
 	article database.Article) error {
 	ctx := context.Background()
 
-	_, err := r.client.Update().
+	_, err := r.Client.Update().
 		Index(indexReadModel).
 		Type("article").
 		Id(aggregateArticleID).
@@ -41,7 +41,7 @@ func (r *ElasticRepository) UpdateReadmodel(aggregateArticleID string,
 func (r *ElasticRepository) GetReadmodel(aggregateID string) (db.Article, error) {
 	config := &configElastic{
 		ctx:             context.Background(),
-		client:          r.client,
+		client:          r.Client,
 		searchKey:       "_id",
 		searchThisValue: aggregateID,
 	}

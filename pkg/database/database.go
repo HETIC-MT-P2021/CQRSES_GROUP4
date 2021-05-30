@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/user"
 	"github.com/caarlos0/env"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -54,6 +55,7 @@ func Connect() error {
 			continue
 		} else {
 			DbConn = db
+			user.NewUserRepositoryImpl(DbConn)
 		}
 
 		break
