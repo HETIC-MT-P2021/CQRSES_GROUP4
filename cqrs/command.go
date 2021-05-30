@@ -46,6 +46,21 @@ func (bus *CommandBus) Dispatch(command Command) error {
 	return fmt.Errorf("the command bus does not have a handler for commands of type: %s", command.Type())
 }
 
+// GetLength of registred command
+func (bus *CommandBus) GetLength() int {
+	return len(bus.handlers)
+}
+
+// GetCommandsName of registred command
+func (bus *CommandBus) GetCommandsName() []string {
+	cmdsName := []string{}
+	for commandName := range bus.handlers {
+		cmdsName = append(cmdsName, commandName)
+	}
+
+	return cmdsName
+}
+
 // CommandImpl Overrides Command
 type CommandImpl struct {
 	command interface{}
@@ -58,7 +73,7 @@ func NewCommandImpl(command interface{}) *CommandImpl {
 	}
 }
 
-// Type Returns event type
+// Type Returns command type
 func (c *CommandImpl) Type() string {
 	return pkg.TypeOf(c.command)
 }

@@ -2,7 +2,6 @@ package queries
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cqrs"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
@@ -10,16 +9,21 @@ import (
 )
 
 // ReadArticleQueryHandler allows to get article
-type ReadArticleQueryHandler struct{}
+type ReadArticleQueryHandler struct{
+	Repo elasticsearch.Repository
+}
 
 // Handle Get an article from elasticsearch database
 func (qHandler ReadArticleQueryHandler) Handle(query cqrs.Query) (interface{}, error) {
-	switch qu := query.Payload().(type) {
+	switch query.Payload().(type) {
 	case *ReadArticleQuery:
-		fmt.Println(qu)
-
 		aggregateArticleID := query.Payload().(*ReadArticleQuery).AggregateArticleID
-		articles, err := elasticsearch.GetReadmodel(aggregateArticleID)
+
+		if aggregateArticleID == "" {
+			return []database.Article{}, errors.New("aggregateArticleID should not be empty")
+		}
+
+		articles, err := qHandler.Repo.GetReadmodel(aggregateArticleID)
 		if err != nil {
 			return []database.Article{}, err
 		}
@@ -31,6 +35,8 @@ func (qHandler ReadArticleQueryHandler) Handle(query cqrs.Query) (interface{}, e
 }
 
 // NewReadArticleQueryHandler Creates an instance
-func NewReadArticleQueryHandler() *ReadArticleQueryHandler {
-	return &ReadArticleQueryHandler{}
+func NewReadArticleQueryHandler(repo elasticsearch.Repository) *ReadArticleQueryHandler {
+	return &ReadArticleQueryHandler{
+		Repo: repo,
+	}
 }

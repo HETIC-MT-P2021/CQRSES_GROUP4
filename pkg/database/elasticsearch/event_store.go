@@ -10,7 +10,7 @@ import (
 func (r *ElasticRepository) StoreEvent(event db.Event) error {
 	ctx := context.Background()
 
-	_, err := r.Client.Index().
+	_, err := ElasticClient.Index().
 		Index(indexEventStore).
 		Type("article").
 		Id(event.ID).
@@ -25,7 +25,7 @@ func (r *ElasticRepository) StoreEvent(event db.Event) error {
 func (r *ElasticRepository) LoadEvents(aggregateArticleID string) ([]db.Event, error) {
 	config := &configElastic{
 		ctx:             context.Background(),
-		client:          r.Client,
+		client:          ElasticClient,
 		searchKey:       "payload.aggregate_article_id",
 		searchThisValue: aggregateArticleID,
 	}

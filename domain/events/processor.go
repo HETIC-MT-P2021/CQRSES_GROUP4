@@ -26,7 +26,8 @@ func (event ArticleCreatedEvent) update(articlePayload map[string]interface{}) (
 //storeReadModel An article in db
 //@see Action interface
 func (event ArticleCreatedEvent) storeReadModel(article database.Article) error {
-	return elasticsearch.StoreReadmodel(article)
+	elasticImpl := elasticsearch.NewElasticRepository(elasticsearch.ElasticClient)
+	return elasticImpl.StoreReadmodel(article)
 }
 
 //storeEventToElastic in db
@@ -39,8 +40,8 @@ func (event ArticleCreatedEvent) storeEventToElastic(article database.Article) e
 		CreatedAt: createdAt,
 		Payload:   article,
 	}
-
-	return elasticsearch.StoreEvent(newEvent)
+	elasticImpl := elasticsearch.NewElasticRepository(elasticsearch.ElasticClient)
+	return elasticImpl.StoreEvent(newEvent)
 }
 
 //------------------------------------------------------------------
@@ -50,7 +51,8 @@ func (event ArticleCreatedEvent) storeEventToElastic(article database.Article) e
 //update article state
 //@see Action interface
 func (event ArticleUpdatedEvent) update(articlePayload map[string]interface{}) (database.Article, error) {
-	article, err := elasticsearch.GetReadmodel(event.AggregateArticleID)
+	elasticImpl := elasticsearch.NewElasticRepository(elasticsearch.ElasticClient)
+	article, err := elasticImpl.GetReadmodel(event.AggregateArticleID)
 	if err != nil {
 		return database.Article{}, err
 	}
@@ -64,7 +66,8 @@ func (event ArticleUpdatedEvent) update(articlePayload map[string]interface{}) (
 //storeReadModel An article in db
 //@see Action interface
 func (event ArticleUpdatedEvent) storeReadModel(article database.Article) error {
-	return elasticsearch.StoreReadmodel(article)
+	elasticImpl := elasticsearch.NewElasticRepository(elasticsearch.ElasticClient)
+	return elasticImpl.StoreReadmodel(article)
 }
 
 //storeEventToElastic in db
@@ -77,6 +80,6 @@ func (event ArticleUpdatedEvent) storeEventToElastic(article database.Article) e
 		CreatedAt: createdAt,
 		Payload:   article,
 	}
-
-	return elasticsearch.StoreEvent(newEvent)
+	elasticImpl := elasticsearch.NewElasticRepository(elasticsearch.ElasticClient)
+	return elasticImpl.StoreEvent(newEvent)
 }

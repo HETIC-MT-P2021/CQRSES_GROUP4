@@ -1,51 +1,52 @@
 package events
 
 import (
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
+	event "github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
+	uuid "github.com/satori/go.uuid"
 )
 
 //Apply To create an aggregate in read-model
 //1. Create new article state
 //2. Add event to elastic-search
 //3. Add read-model to elastic-search
-func (event ArticleCreatedEvent) Apply(ev event.Event) error {
-	payloadMapped, err := getPayloadMapped(ev)
+func (articleCreatedEvent ArticleCreatedEvent) Apply(ev event.Event) error {
+	payloadMapped, err := event.GetPayloadMapped(ev)
 	if err != nil {
 		return err
 	}
 
-	payloadMapped["aggregate_article_id"] = event.AggregateArticleID
+	payloadMapped["aggregate_article_id"] = uuid.NewV4().String()
 
 	// update returns nil error, so useless to init var
-	newArticle, _ := event.update(payloadMapped)
+	newArticle, _ := articleCreatedEvent.update(payloadMapped)
 
 	if ev.ShouldBeStored() {
-		event.storeEventToElastic(newArticle)
+		articleCreatedEvent.storeEventToElastic(newArticle)
 	}
 
-	return event.storeReadModel(newArticle)
+	return articleCreatedEvent.storeReadModel(newArticle)
 }
 
 //Apply To update an aggregate in read-model
 //1. Get aggregate from elastic-search
 //2. update article state
 //3. Update to elastic-search
-func (event ArticleUpdatedEvent) Apply(ev event.Event) error {
-	payloadMapped, err := getPayloadMapped(ev)
+func (articleUpdatedEvent ArticleUpdatedEvent) Apply(ev event.Event) error {
+	payloadMapped, err := event.GetPayloadMapped(ev)
 	if err != nil {
 		return err
 	}
 
-	event.AggregateArticleID = payloadMapped["aggregate_article_id"].(string)
+	articleUpdatedEvent.AggregateArticleID = payloadMapped["aggregate_article_id"].(string)
 
-	articleFromElastic, err := event.update(payloadMapped)
+	articleFromElastic, err := articleUpdatedEvent.update(payloadMapped)
 	if err != nil {
 		return err
 	}
 
 	if ev.ShouldBeStored() {
-		event.storeEventToElastic(articleFromElastic)
+		articleUpdatedEvent.storeEventToElastic(articleFromElastic)
 	}
 
-	return event.storeReadModel(articleFromElastic)
+	return articleUpdatedEvent.storeReadModel(articleFromElastic)
 }

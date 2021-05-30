@@ -48,6 +48,22 @@ func (bus *QueryBus) Dispatch(Query Query) (interface{}, error) {
 	return []database.Article{}, fmt.Errorf("the Query bus does not have a handler for Querys of type: %s", Query.Type())
 }
 
+// GetLength of registred command
+func (bus *QueryBus) GetLength() int {
+	return len(bus.handlers)
+}
+
+// GetQueriesName of registred command
+func (bus *QueryBus) GetQueriesName() []string {
+	cmdsName := []string{}
+	for commandName := range bus.handlers {
+		cmdsName = append(cmdsName, commandName)
+	}
+
+	return cmdsName
+}
+
+
 // QueryImpl Overrides Query
 type QueryImpl struct {
 	Query interface{}
@@ -60,7 +76,7 @@ func NewQueryImpl(Query interface{}) *QueryImpl {
 	}
 }
 
-// Type Returns event type
+// Type Returns query type
 func (c *QueryImpl) Type() string {
 	return pkg.TypeOf(c.Query)
 }

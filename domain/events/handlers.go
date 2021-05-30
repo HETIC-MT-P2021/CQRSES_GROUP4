@@ -2,9 +2,10 @@ package events
 
 import (
 	"errors"
+	"os"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
-	uuid "github.com/satori/go.uuid"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg"
 )
 
 // ArticleCreatedEventHandler allows to create an article
@@ -14,10 +15,10 @@ type ArticleCreatedEventHandler struct{}
 func (eHandler ArticleCreatedEventHandler) Handle(ev event.Event) error {
 	switch evType := ev.Type(); evType {
 	case ArticleCreatedEventType:
-		event := ArticleCreatedEvent{
-			AggregateArticleID: uuid.NewV4().String(),
+		if os.Getenv("APP_ENV") != pkg.Test {
+			return ArticleCreatedEvent{}.Apply(ev)
 		}
-		return event.Apply(ev)
+		return nil
 	default:
 		return errors.New("bad event")
 	}
@@ -35,8 +36,10 @@ type ArticleUpdatedEventHandler struct{}
 func (eHandler ArticleUpdatedEventHandler) Handle(ev event.Event) error {
 	switch evType := ev.Type(); evType {
 	case ArticleUpdatedEventType:
-		event := ArticleUpdatedEvent{}
-		return event.Apply(ev)
+		if os.Getenv("APP_ENV") != pkg.Test {
+			return ArticleUpdatedEvent{}.Apply(ev)
+		}
+		return nil
 	default:
 		return errors.New("bad event")
 	}

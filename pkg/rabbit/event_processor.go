@@ -31,7 +31,8 @@ func (eProcessor EventProcessor) ApplyEventProcessor() (*ConsumeMessage, error) 
 
 //ApplyEvents Unmarshal body and send it to EventProcessor
 func (eProcessor EventProcessor) ApplyEvents(aggregateArticleID string) error {
-	evsFromElastic, err := elasticsearch.LoadEvents(aggregateArticleID)
+	elasticImpl := elasticsearch.NewElasticRepository(elasticsearch.ElasticClient)
+	evsFromElastic, err := elasticImpl.LoadEvents(aggregateArticleID)
 	if err != nil {
 		return err
 	}
