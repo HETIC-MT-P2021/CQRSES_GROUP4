@@ -6,8 +6,6 @@ import (
 
 // Repository Makes process on any database
 type Repository interface {
-	//Close()
-
 	SetUpIndexes() error
 
 	IsClientReady(string) error

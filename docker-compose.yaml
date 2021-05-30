@@ -2,7 +2,7 @@ version: "3.8"
 services:
   # Db mysql
   db:
-    image: mariadb:10.5.8
+    image: mysql:8
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     ports:
@@ -11,7 +11,7 @@ services:
       MYSQL_USER: goproject
       MYSQL_PASSWORD: goproject
       MYSQL_DATABASE: app
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
       DB_HOST: tcp(db:3306)
     volumes:
       - ./build/data:/docker-entrypoint-initdb.d
@@ -82,28 +82,28 @@ services:
       - 9300:9300
 
   # kibana
-  kibana:
-    image: docker.elastic.co/kibana/kibana:7.8.0
-    container_name: kibana
-    environment:
-      SERVER_NAME: localhost
-      ELASTICSEARCH_URL: http://elasticsearch1:9200/
-    ports:
-      - 5601:5601
-    volumes:
-      - type: volume
-        source: logs
-        target: /var/log
-    ulimits:
-      nproc: 65535
-      memlock:
-        soft: -1
-        hard: -1
-    cap_add:
-      - ALL
-    networks:
-      - elastic
-      - ingress
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:7.8.0
+  #   container_name: kibana
+  #   environment:
+  #     SERVER_NAME: localhost
+  #     ELASTICSEARCH_URL: http://elasticsearch1:9200/
+  #   ports:
+  #     - 5601:5601
+  #   volumes:
+  #     - type: volume
+  #       source: logs
+  #       target: /var/log
+  #   ulimits:
+  #     nproc: 65535
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   cap_add:
+  #     - ALL
+  #   networks:
+  #     - elastic
+  #     - ingress
 
   rabbitmq:
     hostname: rabbitmq
@@ -131,12 +131,12 @@ services:
       - rabbitmq
     restart: on-failure
     container_name: consumer
-    build: 
+    build:
       context: ./
       dockerfile: build/Dockerfile-consumer
     ports:
       - "9001:9000"
-    environment: 
+    environment:
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_ERLANG_COOKIE: rabbitmq_cookie
       RABBITMQ_DEFAULT_USER: guest
@@ -144,7 +144,7 @@ services:
       RABBITMQ_PORT: 5672
       INDEX_READ_MODEL: "read-model"
       INDEX_EVENT_STORE: "event-store"
-    networks: 
+    networks:
       - backend
       - elastic
 

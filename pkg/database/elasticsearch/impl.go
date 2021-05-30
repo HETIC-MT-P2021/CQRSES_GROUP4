@@ -48,10 +48,6 @@ func MakeConnection() error {
 	return err
 }
 
-// Close closes database
-/*func (r *ElasticRepository) Close() {
-}*/
-
 // SetUpIndexes Creates needed indexes to make POST request
 // @see mapping.go
 func (r *ElasticRepository) SetUpIndexes() error {
