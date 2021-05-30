@@ -56,7 +56,7 @@ func TestCreateAccount(t *testing.T) {
 
 		err := repo.CreateAccount(tt.userInput)
 
-		if (tt.status == "success") {
+		if tt.status == "success" {
 			assert.NoError(t, err)
 		} else {
 			assert.Error(t, err)
