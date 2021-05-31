@@ -14,7 +14,16 @@ type requestRegister struct {
 	Email    string `json:"email"`
 }
 
-// Register routes for creating account
+// Register route for creating account
+// @Summary Create new account
+// @Description Using JWT auth
+// @Tags auth
+// @Accept  json
+// @Produce  json
+// @Param body body requestRegister true "Add account"
+// @Success 200 {object} pkg.HTTPStatus "Status"
+// @Failure 500 {object} pkg.HTTPError "Error"
+// @Router /register [post]
 func Register(c *gin.Context) {
 	var req user.RequestRegister
 
@@ -38,6 +47,27 @@ func Register(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
-		"message": "Account_created",
+		"status": "Account_created",
+	})
+}
+
+type requestLogin struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+// Login An account
+// @Summary Connect user to app
+// @Description Using JWT auth (look headers for token)
+// @Tags auth
+// @Accept  json
+// @Produce  json
+// @Param body body requestLogin true "Account to login"
+// @Success 200 {string} string "Empty"
+// @Failure 500 {object} pkg.HTTPError "Error"
+// @Router /login [post]
+func Login(c *gin.Context) {
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "Go in ./auth.go to see which jwt function is used",
 	})
 }

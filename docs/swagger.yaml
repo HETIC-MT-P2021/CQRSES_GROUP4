@@ -7,6 +7,22 @@ definitions:
       title:
         type: string
     type: object
+  auth.requestLogin:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  auth.requestRegister:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
   database.Article:
     properties:
       aggregate_article_id:
@@ -169,6 +185,58 @@ paths:
       summary: Create read-model in elastic search
       tags:
       - fixtures
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Using JWT auth (look headers for token)
+      parameters:
+      - description: Account to login
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/auth.requestLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Empty
+          schema:
+            type: string
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/pkg.HTTPError'
+      summary: Connect user to app
+      tags:
+      - auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Using JWT auth
+      parameters:
+      - description: Add account
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/auth.requestRegister'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Status
+          schema:
+            $ref: '#/definitions/pkg.HTTPStatus'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/pkg.HTTPError'
+      summary: Create new account
+      tags:
+      - auth
 securityDefinitions:
   ApiKeyAuth:
     in: header
