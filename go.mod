@@ -10,9 +10,8 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/mock v1.5.0
 	github.com/kyfk/gin-jwt v0.0.0-20191024073357-fd8387d8d220
-	github.com/olivere/elastic v6.2.35+incompatible
+	github.com/olivere/elastic v6.2.35+incompatible // indirect
 	github.com/olivere/elastic/v7 v7.0.22
-	github.com/pkg/errors v0.9.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/streadway/amqp v1.0.0
 	github.com/stretchr/testify v1.7.0
