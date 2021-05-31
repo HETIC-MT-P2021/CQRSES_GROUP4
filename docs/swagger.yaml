@@ -1,4 +1,33 @@
 basePath: /api/v1
+definitions:
+  article.Request:
+    properties:
+      description:
+        type: string
+      title:
+        type: string
+    type: object
+  database.Article:
+    properties:
+      aggregate_article_id:
+        type: string
+      description:
+        type: string
+      title:
+        type: string
+    type: object
+  pkg.HTTPError:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  pkg.HTTPStatus:
+    properties:
+      status:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -9,7 +38,102 @@ info:
     name: MIT
   title: CQRS Event sourcing  documentation API
   version: "1.0"
-paths: {}
+paths:
+  /articles:
+    get:
+      consumes:
+      - application/json
+      description: Get an array of article struct
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: GET /articles
+          schema:
+            type: string
+      summary: Get all articles from elastic search
+      tags:
+      - articles
+  /articles/{aggregate_article_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get article struct
+      parameters:
+      - description: Article ID
+        in: path
+        name: aggregate_article_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/database.Article'
+        "404":
+          description: Article Not found
+          schema:
+            $ref: '#/definitions/pkg.HTTPError'
+      summary: Get an article from elastic search
+      tags:
+      - articles
+  /articles/{aggregate_article_id}}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Article ID
+        in: path
+        name: aggregate_article_id
+        required: true
+        type: integer
+      - description: Update article
+        in: body
+        name: article
+        required: true
+        schema:
+          $ref: '#/definitions/article.Request'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: updated
+          schema:
+            $ref: '#/definitions/pkg.HTTPStatus'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/pkg.HTTPError'
+      summary: Update article in elastic search
+      tags:
+      - articles
+  /articles}:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Add article
+        in: body
+        name: article
+        required: true
+        schema:
+          $ref: '#/definitions/article.Request'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: created
+          schema:
+            $ref: '#/definitions/pkg.HTTPStatus'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/pkg.HTTPError'
+      summary: Create article in elastic search
+      tags:
+      - articles
 securityDefinitions:
   ApiKeyAuth:
     in: header

@@ -12,14 +12,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// GetArticles from read-model index on elastic search
+// GetArticles returns array of article from elastic search
+// @Summary Get all articles from elastic search
+// @Description Get an array of article struct
+// @Tags articles
+// @Accept  json
+// @Produce  json
+// @Success 200 {string} string	"GET /articles"
+// @Router /articles [get]
 func GetArticles(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{
 		"route": "GET /articles",
 	})
 }
 
-// GetArticle from read-model index on elastic search
+// GetArticle returns article from read-model index from elastic search
+// @Summary Get an article from elastic search
+// @Description Get article struct
+// @Tags articles
+// @Accept  json
+// @Produce  json
+// @Param aggregate_article_id path int true "Article ID"
+// @Success 200 {object} database.Article
+// @Failure 404 {object} pkg.HTTPError "Article Not found"
+// @Router /articles/{aggregate_article_id} [get]
 func GetArticle(c *gin.Context) {
 	aggregateArticleID := c.Param("aggregate_article_id")
 
@@ -39,7 +55,20 @@ func GetArticle(c *gin.Context) {
 	c.JSON(http.StatusCreated, article)
 }
 
+type Request struct {
+	Title string
+	Description string
+}
+
 // CreateArticle will generate a command CreateArticleCommand
+// @Summary Create article in elastic search
+// @Tags articles
+// @Accept  json
+// @Produce  json
+// @Param article body Request true "Add article"
+// @Success 201 {object} pkg.HTTPStatus "created"
+// @Failure 500 {object} pkg.HTTPError "Internal Server Error"
+// @Router /articles [post]
 func CreateArticle(c *gin.Context) {
 	var req database.Article
 
@@ -60,13 +89,22 @@ func CreateArticle(c *gin.Context) {
 		})
 	} else {
 		c.JSON(http.StatusServiceUnavailable, gin.H{
-			"status": 0,
+			"status": 500,
 			"error":  err,
 		})
 	}
 }
 
 // UpdateArticle will generate a command UpdateArticleCommand
+// @Summary Update article in elastic search
+// @Tags articles
+// @Accept  json
+// @Produce  json
+// @Param aggregate_article_id path int true "Article ID"
+// @Param article body Request true "Update article"
+// @Success 201 {object} pkg.HTTPStatus "updated"
+// @Failure 500 {object} pkg.HTTPError "Internal Server Error"
+// @Router /articles/{aggregate_article_id}} [put]
 func UpdateArticle(c *gin.Context) {
 	aggregateArticleID := c.Param("aggregate_article_id")
 
@@ -89,7 +127,7 @@ func UpdateArticle(c *gin.Context) {
 		})
 	} else {
 		c.JSON(http.StatusServiceUnavailable, gin.H{
-			"status": 0,
+			"status": 500,
 			"error":  err.Error(),
 		})
 	}

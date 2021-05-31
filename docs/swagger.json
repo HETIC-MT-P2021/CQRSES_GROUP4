@@ -13,7 +13,200 @@
     },
     "host": "localhost:8080",
     "basePath": "/api/v1",
-    "paths": {},
+    "paths": {
+        "/articles": {
+            "get": {
+                "description": "Get an array of article struct",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "articles"
+                ],
+                "summary": "Get all articles from elastic search",
+                "responses": {
+                    "200": {
+                        "description": "GET /articles",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/articles/{aggregate_article_id}": {
+            "get": {
+                "description": "Get article struct",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "articles"
+                ],
+                "summary": "Get an article from elastic search",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Article ID",
+                        "name": "aggregate_article_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/database.Article"
+                        }
+                    },
+                    "404": {
+                        "description": "Article Not found",
+                        "schema": {
+                            "$ref": "#/definitions/pkg.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/articles/{aggregate_article_id}}": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "articles"
+                ],
+                "summary": "Update article in elastic search",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Article ID",
+                        "name": "aggregate_article_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update article",
+                        "name": "article",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/article.Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "updated",
+                        "schema": {
+                            "$ref": "#/definitions/pkg.HTTPStatus"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/pkg.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/articles}": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "articles"
+                ],
+                "summary": "Create article in elastic search",
+                "parameters": [
+                    {
+                        "description": "Add article",
+                        "name": "article",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/article.Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "created",
+                        "schema": {
+                            "$ref": "#/definitions/pkg.HTTPStatus"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/pkg.HTTPError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "article.Request": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "database.Article": {
+            "type": "object",
+            "properties": {
+                "aggregate_article_id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "pkg.HTTPError": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "pkg.HTTPStatus": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        }
+    },
     "securityDefinitions": {
         "ApiKeyAuth": {
             "type": "apiKey",

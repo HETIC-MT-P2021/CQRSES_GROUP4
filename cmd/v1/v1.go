@@ -11,7 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// ApplyRoutes All routes for v1
 func ApplyRoutes(r *gin.Engine) {
 	jwtAuth, err := jwt_auth.NewAuth()
 	if err != nil {
