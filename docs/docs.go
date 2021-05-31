@@ -50,6 +50,43 @@ var doc = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "articles"
+                ],
+                "summary": "Create article in elastic search",
+                "parameters": [
+                    {
+                        "description": "Add article",
+                        "name": "article",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/article.Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "created",
+                        "schema": {
+                            "$ref": "#/definitions/pkg.HTTPStatus"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/pkg.HTTPError"
+                        }
+                    }
+                }
             }
         },
         "/articles/{aggregate_article_id}": {
@@ -136,7 +173,7 @@ var doc = `{
                 }
             }
         },
-        "/articles}": {
+        "/fixtures/event-store": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -145,31 +182,48 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "articles"
+                    "fixtures"
                 ],
-                "summary": "Create article in elastic search",
-                "parameters": [
-                    {
-                        "description": "Add article",
-                        "name": "article",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/article.Request"
-                        }
-                    }
-                ],
+                "summary": "Create event in elastic search",
                 "responses": {
                     "201": {
-                        "description": "created",
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/pkg.HTTPStatus"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Not Created",
                         "schema": {
-                            "$ref": "#/definitions/pkg.HTTPError"
+                            "$ref": "#/definitions/pkg.HTTPStatus"
+                        }
+                    }
+                }
+            }
+        },
+        "/fixtures/read-model": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "fixtures"
+                ],
+                "summary": "Create read-model in elastic search",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/pkg.HTTPStatus"
+                        }
+                    },
+                    "500": {
+                        "description": "Not Created",
+                        "schema": {
+                            "$ref": "#/definitions/pkg.HTTPStatus"
                         }
                     }
                 }

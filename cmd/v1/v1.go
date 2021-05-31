@@ -22,6 +22,6 @@ func ApplyRoutes(r *gin.Engine) {
 		healthcheck.ApplyRoutes(app)
 		auth.ApplyRoutes(app, jwtAuth)
 		article.ApplyRoutes(app, jwtAuth)
-		fixture.ApplyRoutes(app)
+		fixture.ApplyRoutes(app, jwtAuth)
 	}
 }

@@ -54,6 +54,30 @@ paths:
       summary: Get all articles from elastic search
       tags:
       - articles
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Add article
+        in: body
+        name: article
+        required: true
+        schema:
+          $ref: '#/definitions/article.Request'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: created
+          schema:
+            $ref: '#/definitions/pkg.HTTPStatus'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/pkg.HTTPError'
+      summary: Create article in elastic search
+      tags:
+      - articles
   /articles/{aggregate_article_id}:
     get:
       consumes:
@@ -109,31 +133,42 @@ paths:
       summary: Update article in elastic search
       tags:
       - articles
-  /articles}:
+  /fixtures/event-store:
     post:
       consumes:
       - application/json
-      parameters:
-      - description: Add article
-        in: body
-        name: article
-        required: true
-        schema:
-          $ref: '#/definitions/article.Request'
       produces:
       - application/json
       responses:
         "201":
-          description: created
+          description: Created
           schema:
             $ref: '#/definitions/pkg.HTTPStatus'
         "500":
-          description: Internal Server Error
+          description: Not Created
           schema:
-            $ref: '#/definitions/pkg.HTTPError'
-      summary: Create article in elastic search
+            $ref: '#/definitions/pkg.HTTPStatus'
+      summary: Create event in elastic search
       tags:
-      - articles
+      - fixtures
+  /fixtures/read-model:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/pkg.HTTPStatus'
+        "500":
+          description: Not Created
+          schema:
+            $ref: '#/definitions/pkg.HTTPStatus'
+      summary: Create read-model in elastic search
+      tags:
+      - fixtures
 securityDefinitions:
   ApiKeyAuth:
     in: header
