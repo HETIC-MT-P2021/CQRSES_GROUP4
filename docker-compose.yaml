@@ -13,8 +13,6 @@ services:
       MYSQL_DATABASE: app
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
       DB_HOST: tcp(db:3306)
-    volumes:
-      - ./build/data:/docker-entrypoint-initdb.d
     networks:
       - backend
 
