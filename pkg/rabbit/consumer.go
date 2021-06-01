@@ -6,11 +6,11 @@ import (
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/elasticsearch"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/deserialize"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/types"
 )
 
 func getTypeAndPayload(body string) (string, interface{}, error) {
-	bodyMapped, err := deserialize.ToMAP(body)
+	bodyMapped, err := types.StringToMAP(body)
 	if err != nil {
 		return "", "", err
 	}

@@ -28,8 +28,8 @@ func TestInitEventBus(t *testing.T) {
 			t.Errorf("eventBusLength = %d, but want %d", eventBusLength, 2)
 		}
 
-		eventsName := types.ToSliceByte(EventBus.GetEventsName())
-		expectedEventsName := types.ToSliceByte([]string{
+		eventsName := types.StringToSliceByte(EventBus.GetEventsName())
+		expectedEventsName := types.StringToSliceByte([]string{
 			events.ArticleCreatedEventType,
 			events.ArticleUpdatedEventType,
 		})
@@ -56,8 +56,8 @@ func TestInitCommandBus(t *testing.T) {
 			t.Errorf("commandBusLength = %d, but want %d", commandBusLength, 2)
 		}
 
-		commandsName := types.ToSliceByte(CommandBus.GetCommandsName())
-		expectedCommandsName := types.ToSliceByte([]string{
+		commandsName := types.StringToSliceByte(CommandBus.GetCommandsName())
+		expectedCommandsName := types.StringToSliceByte([]string{
 			pkg.TypeOf(&commands.CreateArticleCommand{}),
 			pkg.TypeOf(&commands.UpdateArticleCommand{}),
 		})
@@ -83,8 +83,8 @@ func TestInitQueryBus(t *testing.T) {
 			t.Errorf("queryBusLength = %d, but want %d", queryBusLength, 1)
 		}
 
-		queriesName := types.ToSliceByte(QueryBus.GetQueriesName())
-		expectedQueriesName := types.ToSliceByte([]string{
+		queriesName := types.StringToSliceByte(QueryBus.GetQueriesName())
+		expectedQueriesName := types.StringToSliceByte([]string{
 			pkg.TypeOf(&queries.ReadArticleQuery{}),
 		})
 

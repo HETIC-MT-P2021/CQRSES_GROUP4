@@ -2,10 +2,8 @@ package events
 
 import (
 	"errors"
-	"os"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg"
 )
 
 // ArticleCreatedEventHandler allows to create an article
@@ -15,10 +13,7 @@ type ArticleCreatedEventHandler struct{}
 func (eHandler ArticleCreatedEventHandler) Handle(ev event.Event) error {
 	switch evType := ev.Type(); evType {
 	case ArticleCreatedEventType:
-		if os.Getenv("APP_ENV") != pkg.Test {
-			return ArticleCreatedEvent{}.Apply(ev)
-		}
-		return nil
+		return ArticleCreatedEvent{}.Apply(ev)
 	default:
 		return errors.New("bad event")
 	}
