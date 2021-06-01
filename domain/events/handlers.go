@@ -36,10 +36,7 @@ type ArticleUpdatedEventHandler struct{}
 func (eHandler ArticleUpdatedEventHandler) Handle(ev event.Event) error {
 	switch evType := ev.Type(); evType {
 	case ArticleUpdatedEventType:
-		if os.Getenv("APP_ENV") != pkg.Test {
-			return ArticleUpdatedEvent{}.Apply(ev)
-		}
-		return nil
+		return ArticleUpdatedEvent{}.Apply(ev)
 	default:
 		return errors.New("bad event")
 	}

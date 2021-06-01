@@ -19,9 +19,9 @@ func getTypeAndPayload(body string) (string, interface{}, error) {
 }
 
 // Consume Receives event and dispatch it to event handler
-func (connector *RabbitRepository) Consume(eventBus *event.EventBus) {
-	msgs, err := connector.Chan.Consume(
-		connector.Queue.Name, // queue
+func (rabbit *RabbitRepositoryImpl) Consume(eventBus *event.EventBus) {
+	msgs, err := rabbit.Chan.Consume(
+		rabbit.Queue.Name, // queue
 		"",
 		true,
 		false,

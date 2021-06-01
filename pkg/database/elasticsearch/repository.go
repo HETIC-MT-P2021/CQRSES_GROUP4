@@ -4,8 +4,8 @@ import (
 	db "github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database"
 )
 
-// Repository Makes process on any database
-type Repository interface {
+// ElasticRepository Makes process on any database
+type ElasticRepository interface {
 	SetUpIndexes() error
 
 	IsClientReady(string) error

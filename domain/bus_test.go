@@ -8,7 +8,9 @@ import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/events"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/queries"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/rabbit"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/types"
+	"github.com/streadway/amqp"
 )
 
 func TestInitEventBus(t *testing.T) {
@@ -46,7 +48,8 @@ func TestInitCommandBus(t *testing.T) {
 	}
 
 	for range cases {
-		initCommandBus()
+		rabbitImpl := rabbit.NewRabbitRepository(nil, amqp.Queue{})
+		initCommandBus(rabbitImpl)
 
 		commandBusLength := CommandBus.GetLength()
 		if (commandBusLength != 2) {

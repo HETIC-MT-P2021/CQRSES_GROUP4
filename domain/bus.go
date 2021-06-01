@@ -7,6 +7,7 @@ import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/queries"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/elasticsearch"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/rabbit"
 )
 
 // eventBus Allow to stores all event on database
@@ -21,8 +22,12 @@ var QueryBus *cqrs.QueryBus
 // InitBusses Init event, command and query busses
 func InitBusses() {
 	initEventBus()
-	initCommandBus()
 	initQueryBus()
+
+	_ = rabbit.ConnectToRabbitMQ()
+	rabbitImpl := rabbit.NewRabbitRepository(rabbit.RabbitChannel, rabbit.RabbitQueue)
+	initCommandBus(rabbitImpl)
+
 }
 
 func initEventBus() {
@@ -32,17 +37,17 @@ func initEventBus() {
 	_ = EventBus.AddHandler(events.NewArticleUpdatedEventHandler(), events.ArticleUpdatedEventType)
 }
 
-func initCommandBus() {
+func initCommandBus(rabbitImpl rabbit.RabbitRepository) {
 	// Initialize command bus and all commands available in application
 	CommandBus = cqrs.NewCommandBus()
-	_ = CommandBus.AddHandler(commands.NewCreateArticleCommandHandler(), &commands.CreateArticleCommand{})
-	_ = CommandBus.AddHandler(commands.NewUpdateArticleCommandHandler(), &commands.UpdateArticleCommand{})
+	_ = CommandBus.AddHandler(commands.NewCreateArticleCommandHandler(rabbitImpl), &commands.CreateArticleCommand{})
+	_ = CommandBus.AddHandler(commands.NewUpdateArticleCommandHandler(rabbitImpl), &commands.UpdateArticleCommand{})
 }
 
 func initQueryBus() {
 	// Initialize query bus and all queries available in application
 	QueryBus = cqrs.NewQueryBus()
-	elasticClient := elasticsearch.NewElasticRepository(elasticsearch.ElasticClient)
-	queryHandler := queries.NewReadArticleQueryHandler(elasticClient)
+	elasticImpl := elasticsearch.NewElasticRepository(elasticsearch.ElasticClient)
+	queryHandler := queries.NewReadArticleQueryHandler(elasticImpl)
 	_ = QueryBus.AddHandler(queryHandler, &queries.ReadArticleQuery{})
 }

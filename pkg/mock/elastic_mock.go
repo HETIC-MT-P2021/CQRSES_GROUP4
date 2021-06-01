@@ -11,31 +11,31 @@ import (
 	gomock "github.com/golang/mock/gomock"
 )
 
-// MockRepository is a mock of Repository interface.
-type MockRepository struct {
+// MockElasticRepository is a mock of ElasticRepository interface.
+type MockElasticRepository struct {
 	ctrl     *gomock.Controller
-	recorder *MockRepositoryMockRecorder
+	recorder *MockElasticRepositoryMockRecorder
 }
 
-// MockRepositoryMockRecorder is the mock recorder for MockRepository.
-type MockRepositoryMockRecorder struct {
-	mock *MockRepository
+// MockElasticRepositoryMockRecorder is the mock recorder for MockElasticRepository.
+type MockElasticRepositoryMockRecorder struct {
+	mock *MockElasticRepository
 }
 
-// NewMockRepository creates a new mock instance.
-func NewMockRepository(ctrl *gomock.Controller) *MockRepository {
-	mock := &MockRepository{ctrl: ctrl}
-	mock.recorder = &MockRepositoryMockRecorder{mock}
+// NewMockElasticRepository creates a new mock instance.
+func NewMockElasticRepository(ctrl *gomock.Controller) *MockElasticRepository {
+	mock := &MockElasticRepository{ctrl: ctrl}
+	mock.recorder = &MockElasticRepositoryMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
+func (m *MockElasticRepository) EXPECT() *MockElasticRepositoryMockRecorder {
 	return m.recorder
 }
 
 // CreateIndexIfNotExists mocks base method.
-func (m *MockRepository) CreateIndexIfNotExists(arg0 string) error {
+func (m *MockElasticRepository) CreateIndexIfNotExists(arg0 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateIndexIfNotExists", arg0)
 	ret0, _ := ret[0].(error)
@@ -43,13 +43,13 @@ func (m *MockRepository) CreateIndexIfNotExists(arg0 string) error {
 }
 
 // CreateIndexIfNotExists indicates an expected call of CreateIndexIfNotExists.
-func (mr *MockRepositoryMockRecorder) CreateIndexIfNotExists(arg0 interface{}) *gomock.Call {
+func (mr *MockElasticRepositoryMockRecorder) CreateIndexIfNotExists(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateIndexIfNotExists", reflect.TypeOf((*MockRepository)(nil).CreateIndexIfNotExists), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateIndexIfNotExists", reflect.TypeOf((*MockElasticRepository)(nil).CreateIndexIfNotExists), arg0)
 }
 
 // GetReadmodel mocks base method.
-func (m *MockRepository) GetReadmodel(arg0 string) (database.Article, error) {
+func (m *MockElasticRepository) GetReadmodel(arg0 string) (database.Article, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetReadmodel", arg0)
 	ret0, _ := ret[0].(database.Article)
@@ -58,13 +58,13 @@ func (m *MockRepository) GetReadmodel(arg0 string) (database.Article, error) {
 }
 
 // GetReadmodel indicates an expected call of GetReadmodel.
-func (mr *MockRepositoryMockRecorder) GetReadmodel(arg0 interface{}) *gomock.Call {
+func (mr *MockElasticRepositoryMockRecorder) GetReadmodel(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReadmodel", reflect.TypeOf((*MockRepository)(nil).GetReadmodel), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReadmodel", reflect.TypeOf((*MockElasticRepository)(nil).GetReadmodel), arg0)
 }
 
 // IsClientReady mocks base method.
-func (m *MockRepository) IsClientReady(arg0 string) error {
+func (m *MockElasticRepository) IsClientReady(arg0 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "IsClientReady", arg0)
 	ret0, _ := ret[0].(error)
@@ -72,13 +72,13 @@ func (m *MockRepository) IsClientReady(arg0 string) error {
 }
 
 // IsClientReady indicates an expected call of IsClientReady.
-func (mr *MockRepositoryMockRecorder) IsClientReady(arg0 interface{}) *gomock.Call {
+func (mr *MockElasticRepositoryMockRecorder) IsClientReady(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsClientReady", reflect.TypeOf((*MockRepository)(nil).IsClientReady), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsClientReady", reflect.TypeOf((*MockElasticRepository)(nil).IsClientReady), arg0)
 }
 
 // LoadEvents mocks base method.
-func (m *MockRepository) LoadEvents(arg0 string) ([]database.Event, error) {
+func (m *MockElasticRepository) LoadEvents(arg0 string) ([]database.Event, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "LoadEvents", arg0)
 	ret0, _ := ret[0].([]database.Event)
@@ -87,13 +87,13 @@ func (m *MockRepository) LoadEvents(arg0 string) ([]database.Event, error) {
 }
 
 // LoadEvents indicates an expected call of LoadEvents.
-func (mr *MockRepositoryMockRecorder) LoadEvents(arg0 interface{}) *gomock.Call {
+func (mr *MockElasticRepositoryMockRecorder) LoadEvents(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadEvents", reflect.TypeOf((*MockRepository)(nil).LoadEvents), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadEvents", reflect.TypeOf((*MockElasticRepository)(nil).LoadEvents), arg0)
 }
 
 // SetUpIndexes mocks base method.
-func (m *MockRepository) SetUpIndexes() error {
+func (m *MockElasticRepository) SetUpIndexes() error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SetUpIndexes")
 	ret0, _ := ret[0].(error)
@@ -101,13 +101,13 @@ func (m *MockRepository) SetUpIndexes() error {
 }
 
 // SetUpIndexes indicates an expected call of SetUpIndexes.
-func (mr *MockRepositoryMockRecorder) SetUpIndexes() *gomock.Call {
+func (mr *MockElasticRepositoryMockRecorder) SetUpIndexes() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetUpIndexes", reflect.TypeOf((*MockRepository)(nil).SetUpIndexes))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetUpIndexes", reflect.TypeOf((*MockElasticRepository)(nil).SetUpIndexes))
 }
 
 // StoreEvent mocks base method.
-func (m *MockRepository) StoreEvent(event database.Event) error {
+func (m *MockElasticRepository) StoreEvent(event database.Event) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "StoreEvent", event)
 	ret0, _ := ret[0].(error)
@@ -115,13 +115,13 @@ func (m *MockRepository) StoreEvent(event database.Event) error {
 }
 
 // StoreEvent indicates an expected call of StoreEvent.
-func (mr *MockRepositoryMockRecorder) StoreEvent(event interface{}) *gomock.Call {
+func (mr *MockElasticRepositoryMockRecorder) StoreEvent(event interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreEvent", reflect.TypeOf((*MockRepository)(nil).StoreEvent), event)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreEvent", reflect.TypeOf((*MockElasticRepository)(nil).StoreEvent), event)
 }
 
 // StoreReadmodel mocks base method.
-func (m *MockRepository) StoreReadmodel(arg0 database.Article) error {
+func (m *MockElasticRepository) StoreReadmodel(arg0 database.Article) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "StoreReadmodel", arg0)
 	ret0, _ := ret[0].(error)
@@ -129,13 +129,13 @@ func (m *MockRepository) StoreReadmodel(arg0 database.Article) error {
 }
 
 // StoreReadmodel indicates an expected call of StoreReadmodel.
-func (mr *MockRepositoryMockRecorder) StoreReadmodel(arg0 interface{}) *gomock.Call {
+func (mr *MockElasticRepositoryMockRecorder) StoreReadmodel(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreReadmodel", reflect.TypeOf((*MockRepository)(nil).StoreReadmodel), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreReadmodel", reflect.TypeOf((*MockElasticRepository)(nil).StoreReadmodel), arg0)
 }
 
 // UpdateReadmodel mocks base method.
-func (m *MockRepository) UpdateReadmodel(arg0 string, arg1 database.Article) error {
+func (m *MockElasticRepository) UpdateReadmodel(arg0 string, arg1 database.Article) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateReadmodel", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -143,7 +143,7 @@ func (m *MockRepository) UpdateReadmodel(arg0 string, arg1 database.Article) err
 }
 
 // UpdateReadmodel indicates an expected call of UpdateReadmodel.
-func (mr *MockRepositoryMockRecorder) UpdateReadmodel(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockElasticRepositoryMockRecorder) UpdateReadmodel(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateReadmodel", reflect.TypeOf((*MockRepository)(nil).UpdateReadmodel), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateReadmodel", reflect.TypeOf((*MockElasticRepository)(nil).UpdateReadmodel), arg0, arg1)
 }
