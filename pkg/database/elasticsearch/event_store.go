@@ -12,7 +12,6 @@ func (r *ElasticRepositoryImpl) StoreEvent(event db.Event) error {
 
 	_, err := ElasticClient.Index().
 		Index(indexEventStore).
-		Type("article").
 		Id(event.ID).
 		BodyJson(event).
 		Refresh("wait_for").

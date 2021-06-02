@@ -22,7 +22,10 @@ func (articleCreatedEvent ArticleCreatedEvent) Apply(ev event.Event) error {
 	newArticle, _ := articleCreatedEvent.update(payloadMapped)
 
 	if ev.ShouldBeStored() {
-		articleCreatedEvent.storeEventToElastic(newArticle)
+		err := articleCreatedEvent.storeEventToElastic(newArticle)
+		if err != nil {
+			return err
+		}
 	}
 
 	return articleCreatedEvent.storeReadModel(newArticle)
@@ -46,7 +49,10 @@ func (articleUpdatedEvent ArticleUpdatedEvent) Apply(ev event.Event) error {
 	}
 
 	if ev.ShouldBeStored() {
-		articleUpdatedEvent.storeEventToElastic(articleFromElastic)
+		err := articleUpdatedEvent.storeEventToElastic(articleFromElastic)
+		if err != nil {
+			return err
+		}
 	}
 
 	return articleUpdatedEvent.storeReadModel(articleFromElastic)

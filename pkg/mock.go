@@ -22,7 +22,10 @@ func NewSQLMock() (*sql.DB, sqlmock.Sqlmock) {
 // NewSQLMock Creates fake http handler
 func NewHandlerMock() http.HandlerFunc{
 	return func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("success"))
+		_, err := w.Write([]byte("success"))
+		if err != nil {
+			log.Println(err)
+		}
 	}
 }
 

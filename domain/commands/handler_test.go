@@ -61,9 +61,17 @@ func getFakeCommandBus(t *testing.T) (*fakeCommandBus) {
 		NewCreateArticleCommandHandler(mck), 
 		&CreateArticleCommand{})
 
+	if err != nil {
+		t.Errorf("got error : %s", err.Error())
+	}
+
 	err = bus.AddHandler(
 		NewUpdateArticleCommandHandler(mck),
 		&UpdateArticleCommand{})
+
+	if err != nil {
+		t.Errorf("got error : %s", err.Error())
+	}
 
 	return &fakeCommandBus {
 		commandBus: bus, 

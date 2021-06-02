@@ -28,13 +28,20 @@ func TestInitEventBus(t *testing.T) {
 			t.Errorf("eventBusLength = %d, but want %d", eventBusLength, 2)
 		}
 
-		eventsName := types.StringToSliceByte(EventBus.GetEventsName())
-		expectedEventsName := types.StringToSliceByte([]string{
+		eventsName, err := types.StringToSliceByte(EventBus.GetEventsName())
+		if err != nil {
+			t.Errorf("got err : %s", err.Error())
+		}
+		expectedEventsName, err := types.StringToSliceByte([]string{
 			events.ArticleCreatedEventType,
 			events.ArticleUpdatedEventType,
 		})
 
-		if bytes.Compare(eventsName, expectedEventsName) != 0 {
+		if err != nil {
+			t.Errorf("got err : %s", err.Error())
+		}
+
+		if !bytes.Equal(eventsName, expectedEventsName) {
 			t.Errorf("eventsName != expectedEventsName")
 		}
 	}
@@ -56,13 +63,20 @@ func TestInitCommandBus(t *testing.T) {
 			t.Errorf("commandBusLength = %d, but want %d", commandBusLength, 2)
 		}
 
-		commandsName := types.StringToSliceByte(CommandBus.GetCommandsName())
-		expectedCommandsName := types.StringToSliceByte([]string{
+		commandsName, err := types.StringToSliceByte(CommandBus.GetCommandsName())
+		if err != nil {
+			t.Errorf("got err : %s", err.Error())
+		}
+		expectedCommandsName, err := types.StringToSliceByte([]string{
 			pkg.TypeOf(&commands.CreateArticleCommand{}),
 			pkg.TypeOf(&commands.UpdateArticleCommand{}),
 		})
 
-		if bytes.Compare(commandsName, expectedCommandsName) != 0 {
+		if err != nil {
+			t.Errorf("got err : %s", err.Error())
+		}
+
+		if !bytes.Equal(commandsName, expectedCommandsName) {
 			t.Errorf("commandsName != expectedCommandsName")
 		}
 	}
@@ -83,12 +97,19 @@ func TestInitQueryBus(t *testing.T) {
 			t.Errorf("queryBusLength = %d, but want %d", queryBusLength, 1)
 		}
 
-		queriesName := types.StringToSliceByte(QueryBus.GetQueriesName())
-		expectedQueriesName := types.StringToSliceByte([]string{
+		queriesName, err := types.StringToSliceByte(QueryBus.GetQueriesName())
+		if err != nil {
+			t.Errorf("got err : %s", err.Error())
+		}
+
+		expectedQueriesName, err := types.StringToSliceByte([]string{
 			pkg.TypeOf(&queries.ReadArticleQuery{}),
 		})
+		if err != nil {
+			t.Errorf("got err : %s", err.Error())
+		}
 
-		if bytes.Compare(queriesName, expectedQueriesName) != 0 {
+		if !bytes.Equal(queriesName, expectedQueriesName) {
 			t.Errorf("queriesName != expectedQueriesName")
 		}
 	}

@@ -49,7 +49,10 @@ func (eProcessor EventProcessor) ApplyEvents(aggregateArticleID string) error {
 			StoreInDB: false,
 		}
 		_, err = eProcessor.ApplyEventProcessor()
-
+		if err != nil {
+			return err
+		}
+		
 		fmt.Printf("elastic event : %s\n", evElastic)
 	}
 

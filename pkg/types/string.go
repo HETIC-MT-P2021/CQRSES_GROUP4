@@ -7,10 +7,13 @@ import (
 )
 
 // StringToSliceByte []string => []byte
-func StringToSliceByte(strs []string) []byte{
+func StringToSliceByte(strs []string) ([]byte, error) {
 	buffer := &bytes.Buffer{}
-	gob.NewEncoder(buffer).Encode(strs)
-	return buffer.Bytes()
+	err := gob.NewEncoder(buffer).Encode(strs)
+	if err != nil {
+		return []byte{}, err
+	}
+	return buffer.Bytes(), nil
 }
 
 // StringToMAP string => map

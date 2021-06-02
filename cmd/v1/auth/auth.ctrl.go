@@ -8,19 +8,13 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type requestRegister struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
-}
-
 // Register route for creating account
 // @Summary Create new account
 // @Description Using JWT auth
 // @Tags auth
 // @Accept  json
 // @Produce  json
-// @Param body body requestRegister true "Add account"
+// @Param body body user.requestRegister true "Add account"
 // @Success 200 {object} pkg.HTTPStatus "Status"
 // @Failure 500 {object} pkg.HTTPError "Error"
 // @Router /register [post]
@@ -51,18 +45,13 @@ func Register(c *gin.Context) {
 	})
 }
 
-type requestLogin struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
 // Login An account
 // @Summary Connect user to app
 // @Description Using JWT auth (look headers for token)
 // @Tags auth
 // @Accept  json
 // @Produce  json
-// @Param body body requestLogin true "Account to login"
+// @Param body body user.requestLogin true "Account to login"
 // @Success 200 {string} string "Empty"
 // @Failure 500 {object} pkg.HTTPError "Error"
 // @Router /login [post]

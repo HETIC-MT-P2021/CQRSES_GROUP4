@@ -14,7 +14,6 @@ func (r *ElasticRepositoryImpl) StoreReadmodel(article database.Article) error {
 
 	_, err := ElasticClient.Index().
 		Index(indexReadModel).
-		Type("article").
 		Id(article.ID).
 		BodyJson(article).
 		Refresh("wait_for").
@@ -29,7 +28,6 @@ func (r *ElasticRepositoryImpl) UpdateReadmodel(aggregateArticleID string,
 
 	_, err := ElasticClient.Update().
 		Index(indexReadModel).
-		Type("article").
 		Id(aggregateArticleID).
 		Doc(article).
 		Do(ctx)

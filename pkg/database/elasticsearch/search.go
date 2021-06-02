@@ -8,11 +8,6 @@ import (
 	elastic "github.com/olivere/elastic/v7"
 )
 
-type search interface {
-	doSearch() (*elastic.SearchResult, error)
-	unmarshal() unmarshal
-}
-
 // unmarshal content returned after unmarshalling data
 type unmarshal struct {
 	content interface{}

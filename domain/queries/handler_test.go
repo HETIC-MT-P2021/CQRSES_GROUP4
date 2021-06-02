@@ -41,6 +41,7 @@ func TestReadArticleQueryHandler(t *testing.T) {
 		queryHandler := NewReadArticleQueryHandler(mck)
 		err := bus.AddHandler(queryHandler, &ReadArticleQuery{})
 		if err != nil {
+			t.Errorf("got err : %s", err.Error())
 		}
 
 		mck.

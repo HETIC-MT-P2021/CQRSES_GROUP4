@@ -13,6 +13,9 @@ func (r *UserRepositoryImpl) GetUserFromUsername(username string) (*User, error)
 	)
 
 	stmt, err := r.DbConn.Prepare(query.QUERY_FIND_USERS_BY_USERNAME)
+	if err != nil {
+		return nil, err
+	}
 	defer stmt.Close()
 
 	err = stmt.QueryRow(username).Scan(&Email, &Password, &RoleInt)
@@ -36,7 +39,6 @@ func (r *UserRepositoryImpl) CreateAccount(userInput RequestRegister) (err error
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback()
 
 	stmt, es := tx.Prepare(query.QUERY_CREATE_ACCOUNT)
 	if es != nil {
