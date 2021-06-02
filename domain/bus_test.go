@@ -8,7 +8,9 @@ import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/events"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/queries"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/rabbit"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/types"
+	"github.com/streadway/amqp"
 )
 
 func TestInitEventBus(t *testing.T) {
@@ -26,8 +28,8 @@ func TestInitEventBus(t *testing.T) {
 			t.Errorf("eventBusLength = %d, but want %d", eventBusLength, 2)
 		}
 
-		eventsName := types.ToSliceByte(EventBus.GetEventsName())
-		expectedEventsName := types.ToSliceByte([]string{
+		eventsName := types.StringToSliceByte(EventBus.GetEventsName())
+		expectedEventsName := types.StringToSliceByte([]string{
 			events.ArticleCreatedEventType,
 			events.ArticleUpdatedEventType,
 		})
@@ -46,15 +48,16 @@ func TestInitCommandBus(t *testing.T) {
 	}
 
 	for range cases {
-		initCommandBus()
+		rabbitImpl := rabbit.NewRabbitRepository(nil, amqp.Queue{})
+		initCommandBus(rabbitImpl)
 
 		commandBusLength := CommandBus.GetLength()
 		if (commandBusLength != 2) {
 			t.Errorf("commandBusLength = %d, but want %d", commandBusLength, 2)
 		}
 
-		commandsName := types.ToSliceByte(CommandBus.GetCommandsName())
-		expectedCommandsName := types.ToSliceByte([]string{
+		commandsName := types.StringToSliceByte(CommandBus.GetCommandsName())
+		expectedCommandsName := types.StringToSliceByte([]string{
 			pkg.TypeOf(&commands.CreateArticleCommand{}),
 			pkg.TypeOf(&commands.UpdateArticleCommand{}),
 		})
@@ -80,8 +83,8 @@ func TestInitQueryBus(t *testing.T) {
 			t.Errorf("queryBusLength = %d, but want %d", queryBusLength, 1)
 		}
 
-		queriesName := types.ToSliceByte(QueryBus.GetQueriesName())
-		expectedQueriesName := types.ToSliceByte([]string{
+		queriesName := types.StringToSliceByte(QueryBus.GetQueriesName())
+		expectedQueriesName := types.StringToSliceByte([]string{
 			pkg.TypeOf(&queries.ReadArticleQuery{}),
 		})
 

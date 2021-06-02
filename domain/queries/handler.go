@@ -10,7 +10,7 @@ import (
 
 // ReadArticleQueryHandler allows to get article
 type ReadArticleQueryHandler struct{
-	Repo elasticsearch.Repository
+	Repo elasticsearch.ElasticRepository
 }
 
 // Handle Get an article from elasticsearch database
@@ -35,7 +35,7 @@ func (qHandler ReadArticleQueryHandler) Handle(query cqrs.Query) (interface{}, e
 }
 
 // NewReadArticleQueryHandler Creates an instance
-func NewReadArticleQueryHandler(repo elasticsearch.Repository) *ReadArticleQueryHandler {
+func NewReadArticleQueryHandler(repo elasticsearch.ElasticRepository) *ReadArticleQueryHandler {
 	return &ReadArticleQueryHandler{
 		Repo: repo,
 	}

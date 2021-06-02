@@ -30,5 +30,7 @@ func main() {
 		log.Println(err)
 		return
 	}
-	rabbit.Rabbit.Consume(domain.EventBus)
+
+	rabbitImpl := rabbit.NewRabbitRepository(rabbit.RabbitChannel, rabbit.RabbitQueue)
+	rabbitImpl.Consume(domain.EventBus)
 }

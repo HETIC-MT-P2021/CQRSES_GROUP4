@@ -6,11 +6,11 @@ import (
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/elasticsearch"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/deserialize"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/types"
 )
 
 func getTypeAndPayload(body string) (string, interface{}, error) {
-	bodyMapped, err := deserialize.ToMAP(body)
+	bodyMapped, err := types.StringToMAP(body)
 	if err != nil {
 		return "", "", err
 	}
@@ -19,9 +19,9 @@ func getTypeAndPayload(body string) (string, interface{}, error) {
 }
 
 // Consume Receives event and dispatch it to event handler
-func (connector *RabbitRepository) Consume(eventBus *event.EventBus) {
-	msgs, err := connector.Chan.Consume(
-		connector.Queue.Name, // queue
+func (rabbit *RabbitRepositoryImpl) Consume(eventBus *event.EventBus) {
+	msgs, err := rabbit.Chan.Consume(
+		rabbit.Queue.Name, // queue
 		"",
 		true,
 		false,

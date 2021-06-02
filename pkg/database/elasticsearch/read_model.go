@@ -9,7 +9,7 @@ import (
 )
 
 // StoreReadmodel stores a readmodel for an aggregate article
-func (r *ElasticRepository) StoreReadmodel(article database.Article) error {
+func (r *ElasticRepositoryImpl) StoreReadmodel(article database.Article) error {
 	ctx := context.Background()
 
 	_, err := ElasticClient.Index().
@@ -23,7 +23,7 @@ func (r *ElasticRepository) StoreReadmodel(article database.Article) error {
 }
 
 // UpdateReadmodel stores an updated readmodel for an aggregate article
-func (r *ElasticRepository) UpdateReadmodel(aggregateArticleID string,
+func (r *ElasticRepositoryImpl) UpdateReadmodel(aggregateArticleID string,
 	article database.Article) error {
 	ctx := context.Background()
 
@@ -38,7 +38,7 @@ func (r *ElasticRepository) UpdateReadmodel(aggregateArticleID string,
 
 // GetReadmodel returns an article from elastic
 // pass aggregateID as param to get an article
-func (r *ElasticRepository) GetReadmodel(aggregateID string) (db.Article, error) {
+func (r *ElasticRepositoryImpl) GetReadmodel(aggregateID string) (db.Article, error) {
 	config := &configElastic{
 		ctx:             context.Background(),
 		client:          ElasticClient,

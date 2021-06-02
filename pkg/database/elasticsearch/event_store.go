@@ -7,7 +7,7 @@ import (
 )
 
 // StoreEvent stores an event for an aggregate article
-func (r *ElasticRepository) StoreEvent(event db.Event) error {
+func (r *ElasticRepositoryImpl) StoreEvent(event db.Event) error {
 	ctx := context.Background()
 
 	_, err := ElasticClient.Index().
@@ -22,7 +22,7 @@ func (r *ElasticRepository) StoreEvent(event db.Event) error {
 }
 
 // LoadEvents returns all events from elastic
-func (r *ElasticRepository) LoadEvents(aggregateArticleID string) ([]db.Event, error) {
+func (r *ElasticRepositoryImpl) LoadEvents(aggregateArticleID string) ([]db.Event, error) {
 	config := &configElastic{
 		ctx:             context.Background(),
 		client:          ElasticClient,

@@ -4,55 +4,106 @@ import (
 	"testing"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/cqrs"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/domain/events"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/mock"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/rabbit"
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
 
-func getFakeCommandBus() (*cqrs.CommandBus, error) {
+var (
+	createArticleCommandOk = &CreateArticleCommand{
+		Title: "test",
+		Description: "test",
+	}
+
+	createArticleCommandEmptyTitle = &CreateArticleCommand{
+		Title: "",
+		Description: "test",
+	}
+
+	createArticleCommandEmptyDesc = &CreateArticleCommand{
+		Title: "test",
+		Description: "",
+	}
+
+	updateArticleCommandOk = &UpdateArticleCommand{
+		Title: "test",
+		Description: "test",
+	}
+
+	updateArticleCommandEmptyTitle = &UpdateArticleCommand{
+		Title: "",
+		Description: "test",
+	}
+
+	updateArticleCommandEmptyDesc = &UpdateArticleCommand{
+		Title: "test",
+		Description: "",
+	}
+)
+
+type fakeCommandBus struct {
+	commandBus *cqrs.CommandBus
+	mock *mock.MockRabbitRepository
+	err error
+}
+
+func getFakeCommandBus(t *testing.T) (*fakeCommandBus) {
 	bus := cqrs.NewCommandBus()
 
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mck := mock.NewMockRabbitRepository(ctrl)
+
 	err := bus.AddHandler(
-		NewCreateArticleCommandHandler(), 
+		NewCreateArticleCommandHandler(mck), 
 		&CreateArticleCommand{})
 
 	err = bus.AddHandler(
-		NewUpdateArticleCommandHandler(),
+		NewUpdateArticleCommandHandler(mck),
 		&UpdateArticleCommand{})
 
-	return bus, err
+	return &fakeCommandBus {
+		commandBus: bus, 
+		mock: mck, 
+		err: err,
+	}
 }
 
 func TestCreateArticleCommandHandler(t *testing.T) {
-	bus, err := getFakeCommandBus()
-	if err != nil {
-		t.Errorf(err.Error())
-	}
-
-	createArticleCommandOkImpl := cqrs.NewCommandImpl(&CreateArticleCommand{
-		Title: "test",
-		Description: "test",
-	})
-
-	createArticleCommandEmptyTitleImpl := cqrs.NewCommandImpl(&CreateArticleCommand{
-		Title: "",
-		Description: "test",
-	})
-
-	createArticleCommandEmptyDescImpl := cqrs.NewCommandImpl(&CreateArticleCommand{
-		Title: "test",
-		Description: "",
-	})
-
 	var cases = []struct {
 		what        							string // What I want to test
-		cmdImpl 									cqrs.Command // input
+		cmd       								interface{}
 	}{
-		{"Ok", createArticleCommandOkImpl},
-		{"Empty Title", createArticleCommandEmptyTitleImpl},
-		{"Empty Description", createArticleCommandEmptyDescImpl},
+		{"Ok", createArticleCommandOk},
+		{"Empty Title", createArticleCommandEmptyTitle},
+		{"Empty Description", createArticleCommandEmptyDesc},
 	}
 
 	for _, testCase := range cases {
-		err := bus.Dispatch(testCase.cmdImpl)
+		fake := getFakeCommandBus(t)
+		if fake.err != nil {
+			t.Errorf(fake.err.Error())
+		}
+
+		fake.mock.
+		 	EXPECT().
+		 	QueueConnector(rabbit.ConsumeMessage{
+				EventType: events.ArticleCreatedEventType,
+				Payload: events.ArticleCreatedEvent{
+					Title: testCase.cmd.(*CreateArticleCommand).Title,
+					Description: testCase.cmd.(*CreateArticleCommand).Description,
+				},
+			}).
+		 	DoAndReturn(func(_ interface{}) error {
+		 		return nil
+		 	})
+
+		cmdImpl := cqrs.NewCommandImpl(testCase.cmd)
+
+		err := fake.commandBus.Dispatch(cmdImpl)
 		if testCase.what == "Ok" {
 			assert.NoError(t, err)
 		} else {
@@ -62,37 +113,37 @@ func TestCreateArticleCommandHandler(t *testing.T) {
 }
 
 func TestUpdateArticleCommandHandler(t *testing.T) {
-	bus, err := getFakeCommandBus()
-	if err != nil {
-		t.Errorf(err.Error())
-	}
-
-	updateArticleCommandOkImpl := cqrs.NewCommandImpl(&UpdateArticleCommand{
-		Title: "test",
-		Description: "test",
-	})
-
-	updateArticleCommandEmptyTitleImpl := cqrs.NewCommandImpl(&UpdateArticleCommand{
-		Title: "",
-		Description: "test",
-	})
-
-	updateArticleCommandEmptyDescImpl := cqrs.NewCommandImpl(&UpdateArticleCommand{
-		Title: "test",
-		Description: "",
-	})
-
 	var cases = []struct {
 		what        							string // What I want to test
-		cmdImpl 									cqrs.Command // input
+		cmd 											interface{} // input
 	}{
-		{"Ok", updateArticleCommandOkImpl},
-		{"Empty Title", updateArticleCommandEmptyTitleImpl},
-		{"Empty Description", updateArticleCommandEmptyDescImpl},
+		{"Ok", updateArticleCommandOk},
+		{"Empty Title", updateArticleCommandEmptyTitle},
+		{"Empty Description", updateArticleCommandEmptyDesc},
 	}
 
 	for _, testCase := range cases {
-		err := bus.Dispatch(testCase.cmdImpl)
+		fake := getFakeCommandBus(t)
+		if fake.err != nil {
+			t.Errorf(fake.err.Error())
+		}
+
+		fake.mock.
+		 	EXPECT().
+		 	QueueConnector(rabbit.ConsumeMessage{
+				EventType: events.ArticleUpdatedEventType,
+				Payload: events.ArticleUpdatedEvent{
+					Title: testCase.cmd.(*UpdateArticleCommand).Title,
+					Description: testCase.cmd.(*UpdateArticleCommand).Description,
+				},
+			}).
+		 	DoAndReturn(func(_ interface{}) error {
+		 		return nil
+		 	})
+
+		cmdImpl := cqrs.NewCommandImpl(testCase.cmd)
+
+		err := fake.commandBus.Dispatch(cmdImpl)
 		if testCase.what == "Ok" {
 			assert.NoError(t, err)
 		} else {

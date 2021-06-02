@@ -4,23 +4,26 @@ import (
 	"fmt"
 	"time"
 
-	env "github.com/caarlos0/env"
+	"github.com/caarlos0/env"
 	"github.com/streadway/amqp"
 )
 
-type Repository interface {
-	Publish(string) error
-	Consume()
-}
+var RabbitChannel *amqp.Channel
+var RabbitQueue amqp.Queue
 
-type RabbitRepository struct {
+type RabbitRepositoryImpl struct {
 	Chan  *amqp.Channel
 	Queue amqp.Queue
 }
 
-var Rabbit *RabbitRepository
+func NewRabbitRepository(channel *amqp.Channel, queue amqp.Queue) *RabbitRepositoryImpl {
+	return &RabbitRepositoryImpl{
+		Chan: channel,
+		Queue: queue,
+	}
+}
 
-//rabbitMqEnv contains rabbitmq env credentials
+// rabbitMqEnv contains rabbitmq env credentials
 type rabbitMqEnv struct {
 	RabbitMqHost string `env:"RABBITMQ_HOST"`
 	RabbitMqPort string `env:"RABBITMQ_PORT"`
@@ -33,7 +36,7 @@ const (
 	timeToWaitInSeconds = 5
 )
 
-//ConnectToRabbitMQ is for connecting to rabbitmq
+// ConnectToRabbitMQ is for connecting to rabbitmq
 func ConnectToRabbitMQ() error {
 	cfg := rabbitMqEnv{}
 	if err := env.Parse(&cfg); err != nil {
@@ -74,10 +77,8 @@ func ConnectToRabbitMQ() error {
 		return err
 	}
 
-	Rabbit = &RabbitRepository{
-		Chan:  ch,
-		Queue: q,
-	}
+	RabbitChannel = ch
+	RabbitQueue = q
 
 	return nil
 }

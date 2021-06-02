@@ -8,14 +8,14 @@ import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/database/elasticsearch"
 )
 
-//EventProcessor Stores Body (events.ConsumeMessage type) and EventBus
+// EventProcessor Stores Body (events.ConsumeMessage type) and EventBus
 type EventProcessor struct {
 	Message   []byte
 	EventBus  *event.EventBus
 	StoreInDB bool
 }
 
-//ApplyEventProcessor Unmarshal body and send it to EventProcessor
+// ApplyEventProcessor Unmarshal body and send it to EventProcessor
 func (eProcessor EventProcessor) ApplyEventProcessor() (*ConsumeMessage, error) {
 	var consumeMSG *ConsumeMessage
 	err := json.Unmarshal(eProcessor.Message, &consumeMSG)
@@ -29,7 +29,7 @@ func (eProcessor EventProcessor) ApplyEventProcessor() (*ConsumeMessage, error) 
 	return consumeMSG, eProcessor.EventBus.Dispatch(eventImpl)
 }
 
-//ApplyEvents Unmarshal body and send it to EventProcessor
+// ApplyEvents Unmarshal body and send it to EventProcessor
 func (eProcessor EventProcessor) ApplyEvents(aggregateArticleID string) error {
 	elasticImpl := elasticsearch.NewElasticRepository(elasticsearch.ElasticClient)
 	evsFromElastic, err := elasticImpl.LoadEvents(aggregateArticleID)

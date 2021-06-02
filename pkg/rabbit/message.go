@@ -3,7 +3,7 @@ package rabbit
 import (
 	"encoding/json"
 
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/deserialize"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/types"
 )
 
 //ConsumeMessage Send message to rabbitMQ
@@ -19,5 +19,5 @@ func (message ConsumeMessage) GetPayload() (map[string]interface{}, error) {
 		return map[string]interface{}{}, err
 	}
 
-	return deserialize.ToMAP(string(marshall))
+	return types.StringToMAP(string(marshall))
 }

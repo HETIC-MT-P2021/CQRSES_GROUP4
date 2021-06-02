@@ -4,11 +4,11 @@ import (
 	"github.com/streadway/amqp"
 )
 
-//Publish new event on rabbitmq
-func (connector *RabbitRepository) Publish(event string) error {
-	err := connector.Chan.Publish(
+// Publish new event on rabbitmq
+func (rabbit *RabbitRepositoryImpl) Publish(event string) error {
+	err := rabbit.Chan.Publish(
 		"",
-		connector.Queue.Name, // routing key
+		rabbit.Queue.Name, // routing key
 		false,
 		false,
 		amqp.Publishing{

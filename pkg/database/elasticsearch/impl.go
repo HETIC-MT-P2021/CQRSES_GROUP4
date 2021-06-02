@@ -18,12 +18,12 @@ const (
 
 var ElasticClient *elastic.Client
 
-type ElasticRepository struct {
+type ElasticRepositoryImpl struct {
 	Client *elastic.Client
 }
 
-func NewElasticRepository(elasticClient *elastic.Client) *ElasticRepository {
-	return &ElasticRepository{
+func NewElasticRepository(elasticClient *elastic.Client) *ElasticRepositoryImpl {
+	return &ElasticRepositoryImpl{
 		Client: elasticClient,
 	}
 }
@@ -50,7 +50,7 @@ func MakeConnection() error {
 
 // SetUpIndexes Creates needed indexes to make POST request
 // @see mapping.go
-func (r *ElasticRepository) SetUpIndexes() error {
+func (r *ElasticRepositoryImpl) SetUpIndexes() error {
 	err := r.IsClientReady(clientURL)
 	if err != nil {
 		log.Println(err)
@@ -74,7 +74,7 @@ func (r *ElasticRepository) SetUpIndexes() error {
 }
 
 // isClientReady Checks if client is ready by send packet using ping
-func (r *ElasticRepository) IsClientReady(clientURL string) error {
+func (r *ElasticRepositoryImpl) IsClientReady(clientURL string) error {
 	ctx := context.Background()
 
 	var err error
@@ -91,7 +91,7 @@ func (r *ElasticRepository) IsClientReady(clientURL string) error {
 }
 
 // createIndexIfNotExists on elasticsearch database
-func (r *ElasticRepository) CreateIndexIfNotExists(indexName string) error {
+func (r *ElasticRepositoryImpl) CreateIndexIfNotExists(indexName string) error {
 	ctx := context.Background()
 
 	exists, err := ElasticClient.IndexExists(indexName).Do(ctx)

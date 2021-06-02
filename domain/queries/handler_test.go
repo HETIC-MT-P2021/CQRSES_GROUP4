@@ -36,7 +36,7 @@ func TestReadArticleQueryHandler(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		mck := mock.NewMockRepository(ctrl)
+		mck := mock.NewMockElasticRepository(ctrl)
 
 		queryHandler := NewReadArticleQueryHandler(mck)
 		err := bus.AddHandler(queryHandler, &ReadArticleQuery{})

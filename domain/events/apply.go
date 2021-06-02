@@ -2,6 +2,7 @@ package events
 
 import (
 	event "github.com/HETIC-MT-P2021/CQRSES_GROUP4/event"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP4/pkg/types"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -10,7 +11,7 @@ import (
 //2. Add event to elastic-search
 //3. Add read-model to elastic-search
 func (articleCreatedEvent ArticleCreatedEvent) Apply(ev event.Event) error {
-	payloadMapped, err := event.GetPayloadMapped(ev)
+	payloadMapped, err := types.GetPayloadMapped(ev)
 	if err != nil {
 		return err
 	}
@@ -32,7 +33,7 @@ func (articleCreatedEvent ArticleCreatedEvent) Apply(ev event.Event) error {
 //2. update article state
 //3. Update to elastic-search
 func (articleUpdatedEvent ArticleUpdatedEvent) Apply(ev event.Event) error {
-	payloadMapped, err := event.GetPayloadMapped(ev)
+	payloadMapped, err := types.GetPayloadMapped(ev)
 	if err != nil {
 		return err
 	}
