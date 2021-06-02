@@ -21,6 +21,8 @@ To generate swagger doc
 $ swag init -g cmd/app/main.go
 ```
 
+Go in [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html) to see API doc
+
 ## Features 📘 (incoming)
 
 - As a user, I want to read articles
