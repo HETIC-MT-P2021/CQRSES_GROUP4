@@ -38,7 +38,10 @@ jobs:
       - name: Build
         run: go build -v ./cmd/app
 
-      - name: swagger
-        run: |
-          go get -u github.com/swaggo/swag/cmd/swag
-          swag init -g cmd/app/main.go
+      - name: Test
+        run: go test ./... -v
+
+      #- name: swagger
+      #  run: |
+      #    go get -u github.com/swaggo/swag/cmd/swag
+      #    swag init -g cmd/app/main.go
